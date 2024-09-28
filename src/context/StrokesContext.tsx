@@ -1,6 +1,6 @@
 // StrokesContext.tsx
 import { doesIntersect, Mode, ModeEnum } from "@/lib/utils";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 // Define the type for strokes
 interface StrokesContextType {
@@ -27,6 +27,19 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [undoneStrokes, setUndoneStrokes] = useState<string[]>([]);
   const [mode, setMode] = useState(ModeEnum.CURSOR);
   const [cursorStyle, setCursorStyle] = useState("pointer");
+
+  // Load strokes from localStorage when app starts
+  useEffect(() => {
+    const savedStrokes = localStorage.getItem("strokes");
+    if (savedStrokes) {
+      setStrokes(JSON.parse(savedStrokes));
+    }
+  }, []);
+
+  // Save strokes to localStorage whenever strokes change
+  useEffect(() => {
+    localStorage.setItem("strokes", JSON.stringify(strokes));
+  }, [strokes]);
 
   const updateCursorStyle = (newStyle: string) => {
     setCursorStyle(newStyle);

@@ -34,6 +34,8 @@ const SketchCanvas = () => {
     strokes,
     addStroke,
     eraseStroke,
+    undoStroke,
+    redoStroke,
     mode,
     updateMode,
     cursorStyle,
@@ -72,6 +74,16 @@ const SketchCanvas = () => {
   }
 
   const handleKeyDown = (e: KeyboardEvent) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "z") {
+      e.preventDefault();
+      undoStroke();
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === "y") {
+      e.preventDefault();
+      redoStroke();
+      return;
+    }
     switch (e.key) {
       case "1":
         updateMode(ModeEnum.SCROLL);
