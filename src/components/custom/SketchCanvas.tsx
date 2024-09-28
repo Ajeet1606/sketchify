@@ -30,6 +30,7 @@ interface Point {
 
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
+  const [startPoint, setStartPoint] = useState<Point | null>(null); // Used for square/circle
   const {
     strokes,
     addStroke,
@@ -42,15 +43,40 @@ const SketchCanvas = () => {
 
   function handlePointerDown(e: React.PointerEvent<SVGSVGElement>) {
     e.currentTarget.setPointerCapture(e.pointerId);
-    setPoints([{ x: e.pageX, y: e.pageY, pressure: e.pressure }]);
+    const newPoint = { x: e.pageX, y: e.pageY, pressure: e.pressure };
+    setStartPoint(newPoint); // Save the start point for shapes like square and circle
+    setPoints([newPoint]);
   }
 
   function handlePointerMove(e: React.PointerEvent<SVGSVGElement>) {
-    if (e.buttons !== 1) return; // Ensure the left mouse button is pressed
-    setPoints((prevPoints) => [
-      ...prevPoints,
-      { x: e.pageX, y: e.pageY, pressure: e.pressure },
-    ]);
+    if (e.buttons !== 1 || !startPoint) return; // Ensure the left mouse button is pressed
+
+    const newPoint = { x: e.pageX, y: e.pageY, pressure: e.pressure };
+    if (mode === ModeEnum.SQUARE) {
+      const width = Math.abs(newPoint.x - startPoint.x);
+      const height = Math.abs(newPoint.y - startPoint.y);
+      const size = Math.min(width, height); // Make it a square
+      const newSquare = [
+        startPoint,
+        {
+          x: startPoint.x + size,
+          y: startPoint.y,
+          pressure: newPoint.pressure,
+        },
+        {
+          x: startPoint.x + size,
+          y: startPoint.y + size,
+          pressure: newPoint.pressure,
+        },
+        {
+          x: startPoint.x,
+          y: startPoint.y + size,
+          pressure: newPoint.pressure,
+        },
+        startPoint, // Close the square
+      ];
+      setPoints(newSquare);
+    } else setPoints((prevPoints) => [...prevPoints, newPoint]);
   }
 
   function handlePointerUp() {
@@ -69,6 +95,7 @@ const SketchCanvas = () => {
       addStroke(newStroke);
     }
     setPoints([]); // Reset the current stroke after completion
+    setStartPoint(null);
   }
 
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -103,7 +130,7 @@ const SketchCanvas = () => {
         break;
       case "8":
         updateMode(ModeEnum.ERASE);
-        updateCursorStyle("crosshair");
+        updateCursorStyle("pointer");
         break;
       default:
         break;
@@ -129,11 +156,16 @@ const SketchCanvas = () => {
       >
         {/* Render all saved strokes */}
         {strokes.map((pathData, index) => (
-          <path key={index} d={pathData} fill="black" stroke="none" />
+          <path
+            key={index}
+            d={pathData}
+            fill={mode === ModeEnum.SQUARE ? "none" : "black"}
+            stroke={mode === ModeEnum.DRAW ? "none" : "black"}
+          />
         ))}
 
         {/* Render the current stroke */}
-        {points.length > 0 && mode === ModeEnum.DRAW && (
+        {points.length > 0 && mode !== ModeEnum.ERASE && (
           <path
             d={getSvgPathFromStroke(
               getStroke(
@@ -141,8 +173,8 @@ const SketchCanvas = () => {
                 options
               )
             )}
-            fill="black"
-            stroke="none"
+            fill={mode === ModeEnum.SQUARE ? "none" : "black"}
+            stroke={mode === ModeEnum.DRAW ? "none" : "black"}
           />
         )}
       </svg>

@@ -33,6 +33,9 @@ const Toolbar = () => {
     } else if (newMode === ModeEnum.WRITE) {
       updateMode(ModeEnum.WRITE);
       updateCursorStyle("crosshair");
+    } else if (newMode === ModeEnum.ERASE) {
+      updateMode(ModeEnum.ERASE);
+      updateCursorStyle("pointer");
     }
   };
 
