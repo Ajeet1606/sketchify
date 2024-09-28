@@ -23,7 +23,7 @@ const Toolbar = () => {
       updateCursorStyle("crosshair");
     } else if (newMode === ModeEnum.CURSOR) {
       updateMode(ModeEnum.CURSOR);
-      updateCursorStyle("pointer");
+      updateCursorStyle("default");
     } else if (newMode === ModeEnum.ARROW) {
       updateMode(ModeEnum.ARROW);
       updateCursorStyle("crosshair");
@@ -40,7 +40,7 @@ const Toolbar = () => {
   };
 
   return (
-    <div className="flex justify-center items-center gap-6 px-6 py-4 h-16 shadow rounded-md select-none cursor-default mt-4 z-10">
+    <div className="flex justify-center items-center gap-2 md:gap-6 px-4 py-2 md:px-6 md:py-4 md:h-16 shadow rounded-md select-none cursor-default mt-4 z-10 ">
       {/* scroll */}
       <h3
         className={`cursor-pointer py-1 px-2 rounded flex flex-col ${

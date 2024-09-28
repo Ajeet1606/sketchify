@@ -87,7 +87,7 @@ const SketchCanvas = () => {
         break;
       case "4":
         updateMode(ModeEnum.CURSOR);
-        updateCursorStyle("pointer");
+        updateCursorStyle("default");
         break;
       case "5":
         updateMode(ModeEnum.ARROW);

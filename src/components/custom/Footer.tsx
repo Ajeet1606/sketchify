@@ -8,13 +8,13 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 const Footer = () => {
   const { undoStroke, redoStroke } = useStrokes();
   return (
-    <div className="flex justify-between items-center gap-6 px-6 py-4 h-12 w-full select-none cursor-default mb-4 z-10">
+    <div className="flex justify-between items-center gap-6 px-2 md:px-6 py-4 w-full select-none cursor-default z-10">
       <div className="flex gap-3">
         <div className="flex gap-4 items-center bg-primary shadow rounded-md py-2 px-4">
           <span className="cursor-pointer">
             <RemoveIcon sx={{ background: "none", padding: 0, margin: 0 }} />
           </span>
-          <h3 className="text-lg font-semibold">100%</h3>
+          <h3 className="text-base md:text-lg font-semibold">100%</h3>
           <span className="cursor-pointer">
             <AddIcon sx={{ background: "none", padding: 0, margin: 0 }} />
           </span>
