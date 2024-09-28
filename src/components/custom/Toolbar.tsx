@@ -5,35 +5,93 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
+import { useStrokes } from "@/context/StrokesContext";
 
-interface props {
-  setMode: (mode: string) => void;
-}
-
-const Toolbar: React.FC<props> = ({ setMode }) => {
+const Toolbar = () => {
+  const { updateMode, mode } = useStrokes();
   return (
     <div className="flex justify-center items-center gap-6 px-6 py-4 h-12 shadow rounded-md select-none cursor-default mt-4 z-10">
-      <h3 className="cursor-pointer">
-        <BackHandOutlinedIcon />
+      {/* scroll */}
+      <h3
+        className={`cursor-pointer p-1 rounded ${
+          mode === "scroll" ? "bg-primary" : ""
+        }`}
+        onClick={() => updateMode("scroll")}
+      >
+        <BackHandOutlinedIcon
+          sx={{ background: "none", padding: 0, margin: 0 }}
+        />
       </h3>
-      <h3 className="cursor-pointer" onClick={() => setMode("cursor")}>
-        <NorthWestOutlinedIcon />
+      {/* cursor */}
+      <h3
+        className={`cursor-pointer p-1 rounded ${
+          mode === "cursor" ? "bg-primary" : ""
+        }`}
+        onClick={() => updateMode("cursor")}
+      >
+        <NorthWestOutlinedIcon
+          sx={{ background: "none", padding: 0, margin: 0 }}
+        />
       </h3>
-      <h3 className="cursor-pointer">
-        <CropSquareIcon />
+      {/* square */}
+      <h3
+        className={`cursor-pointer p-1 rounded ${
+          mode === "square" ? "bg-primary" : ""
+        }`}
+        onClick={() => updateMode("square")}
+      >
+        <CropSquareIcon sx={{ background: "none", padding: 0, margin: 0 }} />
       </h3>
-      <h3 className="cursor-pointer">
-        <ArrowForwardIcon />
+      {/* arrow */}
+      <h3
+        className={`cursor-pointer p-1 rounded ${
+          mode === "arrow" ? "bg-primary" : ""
+        }`}
+        onClick={() => updateMode("arrow")}
+      >
+        <ArrowForwardIcon sx={{ background: "none", padding: 0, margin: 0 }} />
       </h3>
-      <h3 className="cursor-pointer">
-        <HorizontalRuleIcon />
+      {/* straight line */}
+      <h3
+        className={`cursor-pointer p-1 rounded ${
+          mode === "line" ? "bg-primary" : ""
+        }`}
+        onClick={() => updateMode("line")}
+      >
+        <HorizontalRuleIcon
+          sx={{ background: "none", padding: 0, margin: 0 }}
+        />
       </h3>
-      <h3 className="cursor-pointer">
-        <CreateOutlinedIcon />
+      {/* draw */}
+      <h3
+        className={`cursor-pointer p-1 rounded ${
+          mode === "draw" ? "bg-primary" : ""
+        }`}
+        onClick={() => updateMode("draw")}
+      >
+        <CreateOutlinedIcon
+          sx={{ background: "none", padding: 0, margin: 0 }}
+        />
       </h3>
-      <h3 className="text-xl font-semibold cursor-pointer">Aa</h3>
-      <h3 className="cursor-pointer" onClick={() => setMode("eraser")}>
-        <BackspaceOutlinedIcon />
+      {/* write */}
+      <h3
+        className={`text-lg font-semibold cursor-pointer p-1 rounded ${
+          mode === "write" ? "bg-primary" : ""
+        }`}
+        onClick={() => updateMode("write")}
+      >
+        Aa
+      </h3>
+      {/* erase */}
+      <h3
+        className={`cursor-pointer p-1 rounded ${
+          mode === "eraser" ? "bg-primary" : ""
+        }`}
+        onClick={() => updateMode("eraser")}
+      >
+        <BackspaceOutlinedIcon
+          sx={{ background: "none", padding: 0, margin: 0 }}
+        />
       </h3>
     </div>
   );

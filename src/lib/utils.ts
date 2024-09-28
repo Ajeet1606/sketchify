@@ -20,3 +20,53 @@ export function getSvgPathFromStroke(stroke: number[][]): string {
   d.push("Z");
   return d.join(" ");
 }
+
+export function doesIntersect(
+  strokePath: string,
+  eraserPoints: number[][],
+  threshold = 20
+): boolean {
+  // Convert the stroke path into an array of points
+  const strokePoints = parsePathToPoints(strokePath);
+
+  // Check if any eraser point is within the threshold distance from any stroke point
+  for (const eraserPoint of eraserPoints) {
+    for (const strokePoint of strokePoints) {
+      const distance = getDistance(eraserPoint, strokePoint);
+      if (distance <= threshold) {
+        return true; // Erase if overlap detected
+      }
+    }
+  }
+
+  return false;
+}
+
+// Helper function to calculate the Euclidean distance between two points
+function getDistance(point1: number[], point2: number[]): number {
+  const [x1, y1] = point1;
+  const [x2, y2] = point2;
+  return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
+}
+
+// Helper function to parse the SVG path string into an array of points
+function parsePathToPoints(path: string): number[][] {
+  // This is a simple parsing function; you may need to improve it based on the complexity of your paths
+  const points: number[][] = [];
+  const regex = /([MLQZ])([^MLQZ]*)/g;
+  let match;
+
+  while ((match = regex.exec(path))) {
+    const command = match[1];
+    const values = match[2]
+      .trim()
+      .split(" ")
+      .map((num) => parseFloat(num));
+    if (command !== "Z") {
+      for (let i = 0; i < values.length; i += 2) {
+        points.push([values[i], values[i + 1]]);
+      }
+    }
+  }
+  return points;
+}

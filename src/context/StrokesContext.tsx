@@ -1,13 +1,17 @@
 // StrokesContext.tsx
+import { doesIntersect } from "@/lib/utils";
 import React, { createContext, useContext, useState } from "react";
 
 // Define the type for strokes
 interface StrokesContextType {
+  mode: string;
   strokes: string[];
   undoneStrokes: string[];
+  updateMode: (mode: string) => void;
   addStroke: (newStroke: string) => void;
   undoStroke: () => void;
   redoStroke: () => void;
+  eraseStroke: (erasePoints: number[][]) => void;
 }
 
 // Create the context
@@ -19,7 +23,11 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [strokes, setStrokes] = useState<string[]>([]);
   const [undoneStrokes, setUndoneStrokes] = useState<string[]>([]);
+  const [mode, setMode] = useState("cursor");
 
+  const updateMode = (newMode: string) => {
+    setMode(newMode);
+  };
   // Function to add a new stroke
   const addStroke = (newStroke: string) => {
     setStrokes((prevStrokes) => [...prevStrokes, newStroke]);
@@ -44,9 +52,26 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  const eraseStroke = (erasePoints: number[][]) => {
+    setStrokes((prevStrokes) => {
+      return prevStrokes.filter(
+        (stroke) => !doesIntersect(stroke, erasePoints) // Remove strokes that overlap with the eraser path
+      );
+    });
+  };
+
   return (
     <StrokesContext.Provider
-      value={{ strokes, addStroke, undoStroke, redoStroke, undoneStrokes }}
+      value={{
+        mode,
+        updateMode,
+        strokes,
+        addStroke,
+        undoStroke,
+        redoStroke,
+        undoneStrokes,
+        eraseStroke,
+      }}
     >
       {children}
     </StrokesContext.Provider>

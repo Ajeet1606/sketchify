@@ -28,12 +28,9 @@ interface Point {
   pressure: number;
 }
 
-interface props {
-  mode: string;
-}
-const SketchCanvas: React.FC<props> = ({}) => {
+const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
-  const { strokes, addStroke } = useStrokes();
+  const { strokes, addStroke, eraseStroke, mode } = useStrokes();
 
   function handlePointerDown(e: React.PointerEvent<SVGSVGElement>) {
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -57,7 +54,12 @@ const SketchCanvas: React.FC<props> = ({}) => {
     ]);
     const newStroke = getSvgPathFromStroke(getStroke(pointArray, options));
 
-    addStroke(newStroke); // Add the new stroke to the saved strokes
+    if (mode === "eraser") {
+      const erasePoints = points.map((p) => [p.x, p.y]);
+      eraseStroke(erasePoints);
+    } else if (mode === "draw") {
+      addStroke(newStroke);
+    }
     setPoints([]); // Reset the current stroke after completion
   }
 
@@ -75,7 +77,7 @@ const SketchCanvas: React.FC<props> = ({}) => {
         ))}
 
         {/* Render the current stroke */}
-        {points.length > 0 && (
+        {points.length > 0 && mode === "draw" && (
           <path
             d={getSvgPathFromStroke(
               getStroke(
