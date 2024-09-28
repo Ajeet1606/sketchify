@@ -70,3 +70,24 @@ function parsePathToPoints(path: string): number[][] {
   }
   return points;
 }
+
+export enum ModeEnum {
+  DRAW = "draw",
+  ERASE = "erase",
+  CURSOR = "cursor",
+  LINE = "line",
+  SCROLL = "scroll",
+  SQUARE = "square",
+  ARROW = "arrow",
+  WRITE = "write",
+}
+
+export type Mode =
+  | ModeEnum.DRAW
+  | ModeEnum.ERASE
+  | ModeEnum.CURSOR
+  | ModeEnum.LINE
+  | ModeEnum.SCROLL
+  | ModeEnum.SQUARE
+  | ModeEnum.ARROW
+  | ModeEnum.WRITE;

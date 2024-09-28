@@ -1,6 +1,6 @@
 import { getStroke } from "perfect-freehand";
-import { getSvgPathFromStroke } from "@/lib/utils";
-import { useState } from "react";
+import { getSvgPathFromStroke, ModeEnum } from "@/lib/utils";
+import { useEffect, useState } from "react";
 import { useStrokes } from "@/context/StrokesContext";
 
 // Define the options object for perfect-freehand
@@ -30,7 +30,7 @@ interface Point {
 
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
-  const { strokes, addStroke, eraseStroke, mode } = useStrokes();
+  const { strokes, addStroke, eraseStroke, mode, updateMode } = useStrokes();
 
   function handlePointerDown(e: React.PointerEvent<SVGSVGElement>) {
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -54,14 +54,53 @@ const SketchCanvas = () => {
     ]);
     const newStroke = getSvgPathFromStroke(getStroke(pointArray, options));
 
-    if (mode === "eraser") {
+    if (mode === ModeEnum.ERASE) {
       const erasePoints = points.map((p) => [p.x, p.y]);
       eraseStroke(erasePoints);
-    } else if (mode === "draw") {
+    } else if (mode === ModeEnum.DRAW) {
       addStroke(newStroke);
     }
     setPoints([]); // Reset the current stroke after completion
   }
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    switch (e.key) {
+      case "1":
+        updateMode(ModeEnum.SCROLL);
+        break;
+      case "2":
+        updateMode(ModeEnum.DRAW);
+        break;
+      case "3":
+        updateMode(ModeEnum.SQUARE);
+        break;
+      case "4":
+        updateMode(ModeEnum.CURSOR);
+        break;
+      case "5":
+        updateMode(ModeEnum.ARROW);
+        break;
+      case "6":
+        updateMode(ModeEnum.LINE);
+        break;
+      case "7":
+        updateMode(ModeEnum.WRITE);
+        break;
+      case "8":
+        updateMode(ModeEnum.ERASE);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Add keyboard event listener on component mount
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown); // Clean up
+    };
+  }, []);
 
   return (
     <div>
@@ -77,7 +116,7 @@ const SketchCanvas = () => {
         ))}
 
         {/* Render the current stroke */}
-        {points.length > 0 && mode === "draw" && (
+        {points.length > 0 && mode === ModeEnum.DRAW && (
           <path
             d={getSvgPathFromStroke(
               getStroke(

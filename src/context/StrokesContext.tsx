@@ -1,13 +1,13 @@
 // StrokesContext.tsx
-import { doesIntersect } from "@/lib/utils";
+import { doesIntersect, Mode, ModeEnum } from "@/lib/utils";
 import React, { createContext, useContext, useState } from "react";
 
 // Define the type for strokes
 interface StrokesContextType {
-  mode: string;
+  mode: Mode;
   strokes: string[];
   undoneStrokes: string[];
-  updateMode: (mode: string) => void;
+  updateMode: (mode: Mode) => void;
   addStroke: (newStroke: string) => void;
   undoStroke: () => void;
   redoStroke: () => void;
@@ -23,9 +23,9 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [strokes, setStrokes] = useState<string[]>([]);
   const [undoneStrokes, setUndoneStrokes] = useState<string[]>([]);
-  const [mode, setMode] = useState("cursor");
+  const [mode, setMode] = useState(ModeEnum.CURSOR);
 
-  const updateMode = (newMode: string) => {
+  const updateMode = (newMode: Mode) => {
     setMode(newMode);
   };
   // Function to add a new stroke
