@@ -13,7 +13,10 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {}
-  	}
+  	},
+    fontFamily: {
+      sans: ["Montserrat", "sans-serif"],
+    }
   },
   plugins: [require("tailwindcss-animate")],
 }

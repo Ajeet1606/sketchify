@@ -1,10 +1,10 @@
-import BackHandIcon from "@mui/icons-material/BackHand";
-import NorthWestIcon from "@mui/icons-material/NorthWest";
+import BackHandOutlinedIcon from "@mui/icons-material/BackHandOutlined";
+import NorthWestOutlinedIcon from "@mui/icons-material/NorthWestOutlined";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
-import BackspaceIcon from "@mui/icons-material/Backspace";
-import CreateIcon from "@mui/icons-material/Create";
+import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
+import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 
 interface props {
   setMode: (mode: string) => void;
@@ -12,12 +12,12 @@ interface props {
 
 const Toolbar: React.FC<props> = ({ setMode }) => {
   return (
-    <div className="flex justify-center items-center gap-6 px-6 py-4 h-12 shadow rounded-md absolute left-1/2 transform -translate-x-1/2 select-none cursor-default mt-4 mb-2 z-10">
+    <div className="flex justify-center items-center gap-6 px-6 py-4 h-12 shadow rounded-md select-none cursor-default mt-4 z-10">
       <h3 className="cursor-pointer">
-        <BackHandIcon />
+        <BackHandOutlinedIcon />
       </h3>
       <h3 className="cursor-pointer" onClick={() => setMode("cursor")}>
-        <NorthWestIcon />
+        <NorthWestOutlinedIcon />
       </h3>
       <h3 className="cursor-pointer">
         <CropSquareIcon />
@@ -29,11 +29,11 @@ const Toolbar: React.FC<props> = ({ setMode }) => {
         <HorizontalRuleIcon />
       </h3>
       <h3 className="cursor-pointer">
-        <CreateIcon />
+        <CreateOutlinedIcon />
       </h3>
-      <h3 className="text-xl font-bold cursor-pointer">Aa</h3>
+      <h3 className="text-xl font-semibold cursor-pointer">Aa</h3>
       <h3 className="cursor-pointer" onClick={() => setMode("eraser")}>
-        <BackspaceIcon />
+        <BackspaceOutlinedIcon />
       </h3>
     </div>
   );
