@@ -5,7 +5,7 @@ import { useStrokes } from "@/context/StrokesContext";
 
 // Define the options object for perfect-freehand
 const options = {
-  size: 32,
+  size: 20,
   thinning: 0.5,
   smoothing: 0.5,
   streamline: 0.5,
@@ -30,7 +30,15 @@ interface Point {
 
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
-  const { strokes, addStroke, eraseStroke, mode, updateMode } = useStrokes();
+  const {
+    strokes,
+    addStroke,
+    eraseStroke,
+    mode,
+    updateMode,
+    cursorStyle,
+    updateCursorStyle,
+  } = useStrokes();
 
   function handlePointerDown(e: React.PointerEvent<SVGSVGElement>) {
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -67,27 +75,35 @@ const SketchCanvas = () => {
     switch (e.key) {
       case "1":
         updateMode(ModeEnum.SCROLL);
+        updateCursorStyle("grab");
         break;
       case "2":
         updateMode(ModeEnum.DRAW);
+        updateCursorStyle("crosshair");
         break;
       case "3":
         updateMode(ModeEnum.SQUARE);
+        updateCursorStyle("crosshair");
         break;
       case "4":
         updateMode(ModeEnum.CURSOR);
+        updateCursorStyle("pointer");
         break;
       case "5":
         updateMode(ModeEnum.ARROW);
+        updateCursorStyle("crosshair");
         break;
       case "6":
         updateMode(ModeEnum.LINE);
+        updateCursorStyle("crosshair");
         break;
       case "7":
         updateMode(ModeEnum.WRITE);
+        updateCursorStyle("crosshair");
         break;
       case "8":
         updateMode(ModeEnum.ERASE);
+        updateCursorStyle("crosshair");
         break;
       default:
         break;
@@ -108,6 +124,7 @@ const SketchCanvas = () => {
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp} // Track when the drawing is finished
+        cursor={cursorStyle}
         style={{ touchAction: "none", width: "100%", height: "100vh" }}
       >
         {/* Render all saved strokes */}

@@ -6,10 +6,36 @@ import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import { useStrokes } from "@/context/StrokesContext";
-import { ModeEnum } from "@/lib/utils";
+import { Mode, ModeEnum } from "@/lib/utils";
 
 const Toolbar = () => {
-  const { updateMode, mode } = useStrokes();
+  const { updateMode, mode, updateCursorStyle } = useStrokes();
+
+  const handleModeChange = (newMode: Mode) => {
+    if (newMode === ModeEnum.SCROLL) {
+      updateMode(ModeEnum.SCROLL);
+      updateCursorStyle("grab");
+    } else if (newMode === ModeEnum.DRAW) {
+      updateMode(ModeEnum.DRAW);
+      updateCursorStyle("crosshair");
+    } else if (newMode === ModeEnum.SQUARE) {
+      updateMode(ModeEnum.SQUARE);
+      updateCursorStyle("crosshair");
+    } else if (newMode === ModeEnum.CURSOR) {
+      updateMode(ModeEnum.CURSOR);
+      updateCursorStyle("pointer");
+    } else if (newMode === ModeEnum.ARROW) {
+      updateMode(ModeEnum.ARROW);
+      updateCursorStyle("crosshair");
+    } else if (newMode === ModeEnum.LINE) {
+      updateMode(ModeEnum.LINE);
+      updateCursorStyle("crosshair");
+    } else if (newMode === ModeEnum.WRITE) {
+      updateMode(ModeEnum.WRITE);
+      updateCursorStyle("crosshair");
+    }
+  };
+
   return (
     <div className="flex justify-center items-center gap-6 px-6 py-4 h-16 shadow rounded-md select-none cursor-default mt-4 z-10">
       {/* scroll */}
@@ -17,7 +43,7 @@ const Toolbar = () => {
         className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
           mode === ModeEnum.SCROLL ? "bg-primary" : ""
         }`}
-        onClick={() => updateMode(ModeEnum.SCROLL)}
+        onClick={() => handleModeChange(ModeEnum.SCROLL)}
       >
         <BackHandOutlinedIcon
           sx={{ background: "none", padding: 0, margin: 0 }}
@@ -29,7 +55,7 @@ const Toolbar = () => {
         className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
           mode === ModeEnum.DRAW ? "bg-primary" : ""
         }`}
-        onClick={() => updateMode(ModeEnum.DRAW)}
+        onClick={() => handleModeChange(ModeEnum.DRAW)}
       >
         <CreateOutlinedIcon
           sx={{ background: "none", padding: 0, margin: 0 }}
@@ -41,7 +67,7 @@ const Toolbar = () => {
         className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
           mode === ModeEnum.SQUARE ? "bg-primary" : ""
         }`}
-        onClick={() => updateMode(ModeEnum.SQUARE)}
+        onClick={() => handleModeChange(ModeEnum.SQUARE)}
       >
         <CropSquareIcon sx={{ background: "none", padding: 0, margin: 0 }} />
         <span className="text-sm text-right -mr-1 -mt-2 -mb-1">3</span>
@@ -51,7 +77,7 @@ const Toolbar = () => {
         className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
           mode === ModeEnum.CURSOR ? "bg-primary" : ""
         }`}
-        onClick={() => updateMode(ModeEnum.CURSOR)}
+        onClick={() => handleModeChange(ModeEnum.CURSOR)}
       >
         <NorthWestOutlinedIcon
           sx={{ background: "none", padding: 0, margin: 0 }}
@@ -63,7 +89,7 @@ const Toolbar = () => {
         className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
           mode === ModeEnum.ARROW ? "bg-primary" : ""
         }`}
-        onClick={() => updateMode(ModeEnum.ARROW)}
+        onClick={() => handleModeChange(ModeEnum.ARROW)}
       >
         <ArrowForwardIcon sx={{ background: "none", padding: 0, margin: 0 }} />
         <span className="text-sm text-right -mr-1 -mt-2 -mb-1">5</span>
@@ -73,7 +99,7 @@ const Toolbar = () => {
         className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
           mode === ModeEnum.LINE ? "bg-primary" : ""
         }`}
-        onClick={() => updateMode(ModeEnum.LINE)}
+        onClick={() => handleModeChange(ModeEnum.LINE)}
       >
         <HorizontalRuleIcon
           sx={{ background: "none", padding: 0, margin: 0 }}
@@ -85,7 +111,7 @@ const Toolbar = () => {
         className={`text-lg font-semibold cursor-pointer py-1 px-2 rounded flex flex-col ${
           mode === ModeEnum.WRITE ? "bg-primary" : ""
         }`}
-        onClick={() => updateMode(ModeEnum.WRITE)}
+        onClick={() => handleModeChange(ModeEnum.WRITE)}
       >
         Aa
         <span className="text-sm text-right -mr-2 -mt-2 -mb-1">7</span>
@@ -95,7 +121,7 @@ const Toolbar = () => {
         className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
           mode === ModeEnum.ERASE ? "bg-primary" : ""
         }`}
-        onClick={() => updateMode(ModeEnum.ERASE)}
+        onClick={() => handleModeChange(ModeEnum.ERASE)}
       >
         <BackspaceOutlinedIcon
           sx={{ background: "none", padding: 0, margin: 0 }}

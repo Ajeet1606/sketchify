@@ -7,6 +7,8 @@ interface StrokesContextType {
   mode: Mode;
   strokes: string[];
   undoneStrokes: string[];
+  cursorStyle: string;
+  updateCursorStyle: (cursorStyle: string) => void;
   updateMode: (mode: Mode) => void;
   addStroke: (newStroke: string) => void;
   undoStroke: () => void;
@@ -24,6 +26,11 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [strokes, setStrokes] = useState<string[]>([]);
   const [undoneStrokes, setUndoneStrokes] = useState<string[]>([]);
   const [mode, setMode] = useState(ModeEnum.CURSOR);
+  const [cursorStyle, setCursorStyle] = useState("pointer");
+
+  const updateCursorStyle = (newStyle: string) => {
+    setCursorStyle(newStyle);
+  };
 
   const updateMode = (newMode: Mode) => {
     setMode(newMode);
@@ -64,12 +71,14 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
     <StrokesContext.Provider
       value={{
         mode,
-        updateMode,
         strokes,
+        undoneStrokes,
+        cursorStyle,
+        updateCursorStyle,
+        updateMode,
         addStroke,
         undoStroke,
         redoStroke,
-        undoneStrokes,
         eraseStroke,
       }}
     >
