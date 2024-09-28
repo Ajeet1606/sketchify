@@ -8,9 +8,9 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 const Footer = () => {
   const { undoStroke, redoStroke } = useStrokes();
   return (
-    <div className="flex justify-between items-center gap-6 px-2 md:px-6 py-4 w-full select-none cursor-default z-10">
-      <div className="flex gap-3">
-        <div className="flex gap-4 items-center bg-primary shadow rounded-md py-2 px-4">
+    <div className="flex justify-around md:justify-between items-center gap-2 md:gap-6 px-2 md:px-6 py-4 w-full select-none cursor-default z-10">
+      <div className="flex gap-2">
+        <div className="flex gap-3 md:gap-4 items-center bg-primary shadow rounded-md py-2 px-4">
           <span className="cursor-pointer">
             <RemoveIcon sx={{ background: "none", padding: 0, margin: 0 }} />
           </span>
@@ -19,7 +19,7 @@ const Footer = () => {
             <AddIcon sx={{ background: "none", padding: 0, margin: 0 }} />
           </span>
         </div>
-        <div className="flex gap-10 items-center bg-primary shadow rounded-md py-2 px-4">
+        <div className="flex gap-4 md:gap-10 items-center bg-primary shadow rounded-md py-2 px-4">
           <span onClick={undoStroke} className="cursor-pointer">
             <UndoOutlinedIcon
               sx={{ background: "none", padding: 0, margin: 0 }}
@@ -33,7 +33,7 @@ const Footer = () => {
         </div>
       </div>
       <div>
-        <h3 className="text-lg cursor-pointer font-semibold bg-primary shadow rounded-md py-2 px-4">
+        <h3 className="cursor-pointer font-semibold bg-primary shadow rounded-md py-2 px-4">
           <a
             href="https://github.com/Ajeet1606/sketchify"
             target="_blank"
