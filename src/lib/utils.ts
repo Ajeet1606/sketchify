@@ -91,3 +91,43 @@ export type Mode =
   | ModeEnum.SQUARE
   | ModeEnum.ARROW
   | ModeEnum.WRITE;
+
+export enum strokeColorsEnum {
+  BLACK = "black",
+  RED = "red",
+  GREEN = "green",
+  PURPLE = "purple",
+  ORANGE = "orange",
+  BROWN = "brown",
+}
+export const strokeColors = [
+  strokeColorsEnum.BLACK,
+  strokeColorsEnum.RED,
+  strokeColorsEnum.GREEN,
+  strokeColorsEnum.PURPLE,
+  strokeColorsEnum.ORANGE,
+  strokeColorsEnum.BROWN,
+];
+
+export type strokeColorsType =
+  | strokeColorsEnum.BLACK
+  | strokeColorsEnum.RED
+  | strokeColorsEnum.GREEN
+  | strokeColorsEnum.PURPLE
+  | strokeColorsEnum.ORANGE
+  | strokeColorsEnum.BROWN;
+
+export const canvasColors = [
+  "black",
+  "red",
+  "green",
+  "purple",
+  "orange",
+  "brown",
+];
+
+export const strokeWidths = [5, 10, 15, 20, 25, 30];
+
+export const eraserStrokeWidths = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+];

@@ -40,8 +40,8 @@ const Toolbar = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-6 px-2 py-2 md:px-6 md:py-4 md:h-16 shadow rounded-md select-none cursor-default mt-4 z-10 ">
-      <div className="flex gap-4 md:gap-6">
+    <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-6 px-2 py-2 md:px-6 md:py-3 md:h-16 border shadow-md rounded-md select-none cursor-default mt-3 z-10 ">
+      <div className="flex items-center gap-4 md:gap-6">
         {/* scroll */}
         <h3
           className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
@@ -89,7 +89,7 @@ const Toolbar = () => {
           <span className="text-sm text-right -mr-1 -mt-2 -mb-1">4</span>
         </h3>
       </div>
-      <div className="flex gap-4 md:gap-6">
+      <div className="flex items-center gap-4 md:gap-6">
         {/* arrow */}
         <h3
           className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
@@ -116,13 +116,13 @@ const Toolbar = () => {
         </h3>
         {/* write */}
         <h3
-          className={`text-lg font-semibold cursor-pointer py-1 px-2 rounded flex flex-col ${
+          className={`text-md font-semibold cursor-pointer py-1 px-2 rounded flex flex-col ${
             mode === ModeEnum.WRITE ? "bg-primary" : ""
           }`}
           onClick={() => handleModeChange(ModeEnum.WRITE)}
         >
           Aa
-          <span className="text-sm text-right -mr-2 -mt-2 -mb-1">7</span>
+          <span className="text-sm text-right font-normal -mr-2 -mt-2 -mb-1">7</span>
         </h3>
         {/* erase */}
         <h3
@@ -134,7 +134,7 @@ const Toolbar = () => {
           <BackspaceOutlinedIcon
             sx={{ background: "none", padding: 0, margin: 0 }}
           />
-          <span className="text-sm text-right -mr-2 -mt-1 -mb-1">8</span>
+          <span className="text-sm text-right -mr-2 -mt-2 -mb-1">8</span>
         </h3>
       </div>
     </div>

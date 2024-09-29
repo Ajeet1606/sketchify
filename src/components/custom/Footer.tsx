@@ -4,6 +4,13 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { useStrokes } from "@/context/StrokesContext";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import StylingPallete from "./StylingPallete";
 
 const Footer = () => {
   const { undoStroke, redoStroke } = useStrokes();
@@ -19,12 +26,26 @@ const Footer = () => {
             <AddIcon sx={{ background: "none", padding: 0, margin: 0 }} />
           </span>
         </div>
-        <div className="flex gap-4 md:gap-10 items-center bg-primary shadow rounded-md py-2 px-4">
+        <div className="flex gap-4 md:gap-4 items-center bg-primary shadow rounded-md py-2 px-4">
           <span onClick={undoStroke} className="cursor-pointer">
             <UndoOutlinedIcon
               sx={{ background: "none", padding: 0, margin: 0 }}
             />
           </span>
+
+          <Popover>
+            <PopoverTrigger>
+              <span>
+                <PaletteOutlinedIcon
+                  sx={{ background: "none", padding: 0, margin: 0 }}
+                />
+              </span>
+            </PopoverTrigger>
+            <PopoverContent className="w-fit">
+              <StylingPallete />
+            </PopoverContent>
+          </Popover>
+
           <span onClick={redoStroke} className="cursor-pointer">
             <RedoOutlinedIcon
               sx={{ background: "none", padding: 0, margin: 0 }}

@@ -1,19 +1,27 @@
 // StrokesContext.tsx
-import { doesIntersect, Mode, ModeEnum } from "@/lib/utils";
+import { doesIntersect, Mode, ModeEnum, strokeColorsEnum } from "@/lib/utils";
 import React, { createContext, useContext, useEffect, useState } from "react";
+
+// Add this to the strokes array in the context provider
+interface Stroke {
+  path: string;
+  color: string;
+}
 
 // Define the type for strokes
 interface StrokesContextType {
   mode: Mode;
-  strokes: string[];
-  undoneStrokes: string[];
+  strokes: Stroke[];
+  undoneStrokes: Stroke[];
   cursorStyle: string;
+  strokeColor: strokeColorsEnum;
   updateCursorStyle: (cursorStyle: string) => void;
   updateMode: (mode: Mode) => void;
-  addStroke: (newStroke: string) => void;
+  addStroke: (newStroke: Stroke) => void;
   undoStroke: () => void;
   redoStroke: () => void;
   eraseStroke: (erasePoints: number[][]) => void;
+  updateStrokeColor: (strokeColor: strokeColorsEnum) => void;
 }
 
 // Create the context
@@ -23,10 +31,13 @@ const StrokesContext = createContext<StrokesContextType | undefined>(undefined);
 export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [strokes, setStrokes] = useState<string[]>([]);
-  const [undoneStrokes, setUndoneStrokes] = useState<string[]>([]);
+  const [strokes, setStrokes] = useState<Stroke[]>([]);
+  const [undoneStrokes, setUndoneStrokes] = useState<Stroke[]>([]);
   const [mode, setMode] = useState(ModeEnum.CURSOR);
   const [cursorStyle, setCursorStyle] = useState("pointer");
+  const [strokeColor, setStrokeColor] = useState<strokeColorsEnum>(
+    strokeColorsEnum.BLACK
+  );
 
   // Load strokes from localStorage when app starts
   useEffect(() => {
@@ -41,6 +52,10 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("strokes", JSON.stringify(strokes));
   }, [strokes]);
 
+  const updateStrokeColor = (strokeColor: strokeColorsEnum) => {
+    setStrokeColor(strokeColor);
+  };
+
   const updateCursorStyle = (newStyle: string) => {
     setCursorStyle(newStyle);
   };
@@ -49,7 +64,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
     setMode(newMode);
   };
   // Function to add a new stroke
-  const addStroke = (newStroke: string) => {
+  const addStroke = (newStroke: Stroke) => {
     setStrokes((prevStrokes) => [...prevStrokes, newStroke]);
     setUndoneStrokes([]);
   };
@@ -75,7 +90,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
   const eraseStroke = (erasePoints: number[][]) => {
     setStrokes((prevStrokes) => {
       return prevStrokes.filter(
-        (stroke) => !doesIntersect(stroke, erasePoints) // Remove strokes that overlap with the eraser path
+        (stroke) => !doesIntersect(stroke.path, erasePoints) // Remove strokes that overlap with the eraser path
       );
     });
   };
@@ -87,6 +102,8 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
         strokes,
         undoneStrokes,
         cursorStyle,
+        strokeColor,
+        updateStrokeColor,
         updateCursorStyle,
         updateMode,
         addStroke,

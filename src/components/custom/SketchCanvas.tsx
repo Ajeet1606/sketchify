@@ -5,7 +5,7 @@ import { useStrokes } from "@/context/StrokesContext";
 
 // Define the options object for perfect-freehand
 const options = {
-  size: 20,
+  size: 5,
   thinning: 0.5,
   smoothing: 0.5,
   streamline: 0.5,
@@ -31,12 +31,13 @@ interface Point {
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
   const {
+    mode,
     strokes,
+    strokeColor,
     addStroke,
     eraseStroke,
     undoStroke,
     redoStroke,
-    mode,
     updateMode,
     cursorStyle,
     updateCursorStyle,
@@ -62,13 +63,16 @@ const SketchCanvas = () => {
       point.y,
       point.pressure,
     ]);
-    const newStroke = getSvgPathFromStroke(getStroke(pointArray, options));
+    const newStrokePath = getSvgPathFromStroke(getStroke(pointArray, options));
 
     if (mode === ModeEnum.ERASE) {
       const erasePoints = points.map((p) => [p.x, p.y]);
       eraseStroke(erasePoints);
     } else if (mode === ModeEnum.DRAW) {
-      addStroke(newStroke);
+      addStroke({
+        path: newStrokePath,
+        color: strokeColor,
+      });
     }
     setPoints([]); // Reset the current stroke after completion
   }
@@ -140,8 +144,8 @@ const SketchCanvas = () => {
         style={{ touchAction: "none", width: "100%", height: "100vh" }}
       >
         {/* Render all saved strokes */}
-        {strokes.map((pathData, index) => (
-          <path key={index} d={pathData} fill="black" stroke="none" />
+        {strokes.map((stroke, index) => (
+          <path key={index} d={stroke.path} fill={stroke.color} stroke="none" />
         ))}
 
         {/* Render the current stroke */}
@@ -153,7 +157,7 @@ const SketchCanvas = () => {
                 options
               )
             )}
-            fill="black"
+            fill={strokeColor}
             stroke="none"
           />
         )}
