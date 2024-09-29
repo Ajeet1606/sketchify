@@ -1,9 +1,10 @@
 import { useStrokes } from "@/context/StrokesContext";
-import { strokeColors } from "@/lib/utils";
+import { strokeColors, strokeWidths } from "@/lib/utils";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 
 const StylingPallete = () => {
-  const { updateStrokeColor, strokeColor } = useStrokes();
+  const { updateStrokeColor, strokeColor, updateStrokeWidth, strokeWidth } =
+    useStrokes();
   return (
     <div className="flex gap-4 flex-col">
       {/* stroke color */}
@@ -15,7 +16,6 @@ const StylingPallete = () => {
               className="w-8 h-8 rounded-md cursor-pointer flex justify-center items-center"
               style={{ backgroundColor: color }}
               key={color}
-              aria-hidden="true"
               onClick={() => updateStrokeColor(color)}
             >
               {strokeColor === color && (
@@ -32,19 +32,23 @@ const StylingPallete = () => {
           ))}
         </div>
       </div>
-      
-      {/* <div className="flex flex-col">
+
+      <div className="flex flex-col">
         <h3 className="text-sm mb-1">Stroke Width</h3>
         <div className="flex gap-2">
           {strokeWidths.map((width) => (
             <span
-              className={`w-8 h-[${width}px] rounded-md cursor-pointer`}
+              className={`w-8 h-8 rounded-md cursor-pointer border flex justify-center items-center ${
+                width === strokeWidth ? "bg-primary" : ""
+              }`}
               key={width}
-              aria-hidden="true"
-            >-</span>
+              onClick={() => updateStrokeWidth(width)}
+            >
+              {width}
+            </span>
           ))}
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

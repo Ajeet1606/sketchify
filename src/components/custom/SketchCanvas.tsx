@@ -5,7 +5,7 @@ import { useStrokes } from "@/context/StrokesContext";
 
 // Define the options object for perfect-freehand
 const options = {
-  size: 5,
+  size: 2,
   thinning: 0.5,
   smoothing: 0.5,
   streamline: 0.5,
@@ -16,7 +16,7 @@ const options = {
     cap: true,
   },
   end: {
-    taper: 100,
+    taper: 0, //edge sharpness
     easing: (t: number) => t,
     cap: true,
   },
@@ -34,6 +34,7 @@ const SketchCanvas = () => {
     mode,
     strokes,
     strokeColor,
+    strokeWidth,
     addStroke,
     eraseStroke,
     undoStroke,
@@ -42,6 +43,8 @@ const SketchCanvas = () => {
     cursorStyle,
     updateCursorStyle,
   } = useStrokes();
+
+  options.size = strokeWidth;
 
   function handlePointerDown(e: React.PointerEvent<SVGSVGElement>) {
     e.currentTarget.setPointerCapture(e.pointerId);

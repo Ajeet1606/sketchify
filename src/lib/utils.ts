@@ -109,14 +109,6 @@ export const strokeColors = [
   strokeColorsEnum.BROWN,
 ];
 
-export type strokeColorsType =
-  | strokeColorsEnum.BLACK
-  | strokeColorsEnum.RED
-  | strokeColorsEnum.GREEN
-  | strokeColorsEnum.PURPLE
-  | strokeColorsEnum.ORANGE
-  | strokeColorsEnum.BROWN;
-
 export const canvasColors = [
   "black",
   "red",

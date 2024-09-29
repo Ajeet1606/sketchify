@@ -15,6 +15,7 @@ interface StrokesContextType {
   undoneStrokes: Stroke[];
   cursorStyle: string;
   strokeColor: strokeColorsEnum;
+  strokeWidth: number;
   updateCursorStyle: (cursorStyle: string) => void;
   updateMode: (mode: Mode) => void;
   addStroke: (newStroke: Stroke) => void;
@@ -22,6 +23,7 @@ interface StrokesContextType {
   redoStroke: () => void;
   eraseStroke: (erasePoints: number[][]) => void;
   updateStrokeColor: (strokeColor: strokeColorsEnum) => void;
+  updateStrokeWidth: (strokeWidth: number) => void;
 }
 
 // Create the context
@@ -38,7 +40,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [strokeColor, setStrokeColor] = useState<strokeColorsEnum>(
     strokeColorsEnum.BLACK
   );
-
+  const [strokeWidth, setStrokeWidth] = useState<number>(15);
   // Load strokes from localStorage when app starts
   useEffect(() => {
     const savedStrokes = localStorage.getItem("strokes");
@@ -52,6 +54,9 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("strokes", JSON.stringify(strokes));
   }, [strokes]);
 
+  const updateStrokeWidth = (strokeWidth: number) => {
+    setStrokeWidth(strokeWidth);
+  };
   const updateStrokeColor = (strokeColor: strokeColorsEnum) => {
     setStrokeColor(strokeColor);
   };
@@ -103,6 +108,8 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
         undoneStrokes,
         cursorStyle,
         strokeColor,
+        strokeWidth,
+        updateStrokeWidth,
         updateStrokeColor,
         updateCursorStyle,
         updateMode,

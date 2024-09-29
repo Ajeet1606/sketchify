@@ -15,8 +15,8 @@ import StylingPallete from "./StylingPallete";
 const Footer = () => {
   const { undoStroke, redoStroke } = useStrokes();
   return (
-    <div className="flex justify-around md:justify-between items-center gap-2 md:gap-6 px-2 md:px-6 py-4 w-full select-none cursor-default z-10">
-      <div className="flex gap-2">
+    <div className="flex justify-center items-center gap-2 md:gap-4 px-2 md:px-6 py-4 w-full select-none cursor-default z-10">
+      <div className="flex gap-2 md:gap-4">
         <div className="flex gap-3 md:gap-4 items-center bg-primary shadow rounded-md py-2 px-4">
           <span className="cursor-pointer">
             <RemoveIcon sx={{ background: "none", padding: 0, margin: 0 }} />
