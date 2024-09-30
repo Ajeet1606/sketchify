@@ -1,6 +1,6 @@
 import { getStroke } from "perfect-freehand";
 import { getSvgPathFromStroke, ModeEnum } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useStrokes } from "@/context/StrokesContext";
 
 // Define the options object for perfect-freehand
@@ -30,11 +30,18 @@ interface Point {
 
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
+  //const [scale, setScale] = useState(1); // Zoom level state
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 }); // Pan offset state
+  const [isPanning, setIsPanning] = useState(false);
+  const [startPan, setStartPan] = useState({ x: 0, y: 0 });
+  const svgRef = useRef<SVGSVGElement>(null);
+
   const {
     mode,
     strokes,
     strokeColor,
     strokeWidth,
+    scale,
     addStroke,
     eraseStroke,
     undoStroke,
@@ -47,19 +54,51 @@ const SketchCanvas = () => {
   options.size = strokeWidth;
 
   function handlePointerDown(e: React.PointerEvent<SVGSVGElement>) {
-    e.currentTarget.setPointerCapture(e.pointerId);
-    setPoints([{ x: e.pageX, y: e.pageY, pressure: e.pressure }]);
+    if (mode === ModeEnum.SCROLL) {
+      // Pan mode
+      setIsPanning(true);
+      setStartPan({ x: e.clientX - panOffset.x, y: e.clientY - panOffset.y });
+    } else {
+      // Drawing mode
+      e.currentTarget.setPointerCapture(e.pointerId);
+      const svg = svgRef.current;
+      if (svg) {
+        const rect = svg.getBoundingClientRect(); // Get the SVG dimensions
+        const scaledX = (e.clientX - rect.left - panOffset.x) / scale; // Adjust for scaling and panning
+        const scaledY = (e.clientY - rect.top - panOffset.y) / scale; // Adjust for scaling and panning
+        setPoints([{ x: scaledX, y: scaledY, pressure: e.pressure }]);
+      }
+    }
   }
 
   function handlePointerMove(e: React.PointerEvent<SVGSVGElement>) {
+    if (mode === ModeEnum.SCROLL && isPanning) {
+      setPanOffset({
+        x: e.clientX - startPan.x,
+        y: e.clientY - startPan.y,
+      });
+      return;
+    }
+
     if (e.buttons !== 1) return; // Ensure the left mouse button is pressed
-    setPoints((prevPoints) => [
-      ...prevPoints,
-      { x: e.pageX, y: e.pageY, pressure: e.pressure },
-    ]);
+    const svg = svgRef.current;
+    if (svg) {
+      const rect = svg.getBoundingClientRect(); // Get the SVG dimensions
+      const scaledX = (e.clientX - rect.left - panOffset.x) / scale; // Adjust for scaling and panning
+      const scaledY = (e.clientY - rect.top - panOffset.y) / scale; // Adjust for scaling and panning
+      setPoints((prevPoints) => [
+        ...prevPoints,
+        { x: scaledX, y: scaledY, pressure: e.pressure },
+      ]);
+    }
   }
 
   function handlePointerUp() {
+    if (mode === ModeEnum.SCROLL) {
+      setIsPanning(false);
+      return;
+    }
+
     // Convert the current stroke to SVG path and add to strokes array
     const pointArray = points.map((point) => [
       point.x,
@@ -118,7 +157,7 @@ const SketchCanvas = () => {
         break;
       case "7":
         updateMode(ModeEnum.WRITE);
-        updateCursorStyle("crosshair");
+        updateCursorStyle("text");
         break;
       case "8":
         updateMode(ModeEnum.ERASE);
@@ -133,18 +172,26 @@ const SketchCanvas = () => {
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
     return () => {
-      window.removeEventListener("keydown", handleKeyDown); // Clean up
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
   return (
     <div>
       <svg
+        ref={svgRef}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp} // Track when the drawing is finished
         cursor={cursorStyle}
-        style={{ touchAction: "none", width: "100%", height: "100vh" }}
+        style={{
+          touchAction: "none",
+          width: "100%",
+          height: "100vh",
+        }}
+        viewBox={`${-panOffset.x} ${-panOffset.y} ${
+          window.innerWidth / scale
+        } ${window.innerHeight / scale}`} // Apply pan/zoom
       >
         {/* Render all saved strokes */}
         {strokes.map((stroke, index) => (

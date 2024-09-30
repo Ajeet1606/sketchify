@@ -32,7 +32,7 @@ const Toolbar = () => {
       updateCursorStyle("crosshair");
     } else if (newMode === ModeEnum.WRITE) {
       updateMode(ModeEnum.WRITE);
-      updateCursorStyle("crosshair");
+      updateCursorStyle("text");
     } else if (newMode === ModeEnum.ERASE) {
       updateMode(ModeEnum.ERASE);
       updateCursorStyle("pointer");
@@ -44,7 +44,7 @@ const Toolbar = () => {
       <div className="flex items-center gap-4 md:gap-6">
         {/* scroll */}
         <h3
-          className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
+          className={`cursor-pointer py-1 px-2 rounded flex flex-col transition-colors duration-300 ease-in-out ${
             mode === ModeEnum.SCROLL ? "bg-primary" : ""
           }`}
           onClick={() => handleModeChange(ModeEnum.SCROLL)}
@@ -56,7 +56,7 @@ const Toolbar = () => {
         </h3>
         {/* draw */}
         <h3
-          className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
+          className={`cursor-pointer py-1 px-2 rounded flex flex-col transition-colors duration-300 ease-in-out ${
             mode === ModeEnum.DRAW ? "bg-primary" : ""
           }`}
           onClick={() => handleModeChange(ModeEnum.DRAW)}
@@ -68,7 +68,7 @@ const Toolbar = () => {
         </h3>
         {/* square */}
         <h3
-          className={`cursor-pointer py-1 px-2 rounded flex flex-col ${
+          className={`cursor-pointer py-1 px-2 rounded flex flex-col transition-colors duration-300 ease-in-out ${
             mode === ModeEnum.SQUARE ? "bg-primary" : ""
           }`}
           onClick={() => handleModeChange(ModeEnum.SQUARE)}
@@ -122,7 +122,9 @@ const Toolbar = () => {
           onClick={() => handleModeChange(ModeEnum.WRITE)}
         >
           Aa
-          <span className="text-sm text-right font-normal -mr-2 -mt-2 -mb-1">7</span>
+          <span className="text-sm text-right font-normal -mr-2 -mt-2 -mb-1">
+            7
+          </span>
         </h3>
         {/* erase */}
         <h3

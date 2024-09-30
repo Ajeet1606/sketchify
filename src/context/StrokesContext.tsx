@@ -16,6 +16,9 @@ interface StrokesContextType {
   cursorStyle: string;
   strokeColor: strokeColorsEnum;
   strokeWidth: number;
+  scale: number;
+  handleZoomIn: () => void;
+  handleZoomOut: () => void;
   updateCursorStyle: (cursorStyle: string) => void;
   updateMode: (mode: Mode) => void;
   addStroke: (newStroke: Stroke) => void;
@@ -40,7 +43,9 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [strokeColor, setStrokeColor] = useState<strokeColorsEnum>(
     strokeColorsEnum.BLACK
   );
-  const [strokeWidth, setStrokeWidth] = useState<number>(15);
+  const [strokeWidth, setStrokeWidth] = useState<number>(10);
+  const [scale, setScale] = useState(1); // Zoom level state
+
   // Load strokes from localStorage when app starts
   useEffect(() => {
     const savedStrokes = localStorage.getItem("strokes");
@@ -100,6 +105,14 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  const handleZoomIn = () => {
+    setScale((prevScale) => Math.min(prevScale * 1.2, 5)); // Max scale limit of 5
+  };
+
+  const handleZoomOut = () => {
+    setScale((prevScale) => Math.max(prevScale * 0.8, 0.2)); // Min scale limit of 0.2
+  };
+
   return (
     <StrokesContext.Provider
       value={{
@@ -109,6 +122,9 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
         cursorStyle,
         strokeColor,
         strokeWidth,
+        scale,
+        handleZoomIn,
+        handleZoomOut,
         updateStrokeWidth,
         updateStrokeColor,
         updateCursorStyle,
