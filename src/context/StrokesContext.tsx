@@ -4,6 +4,7 @@ import {
   eraseTextStrokes,
   Mode,
   ModeEnum,
+  Stroke,
   strokeColorsEnum,
 } from "@/lib/utils";
 import React, {
@@ -13,18 +14,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-
-// Add this to the strokes array in the context provider
-export interface Stroke {
-  type: "draw" | "erase" | "text"; // Add 'text' as a type
-  path?: string; // Path for freehand strokes
-  color: string; // Color for freehand strokes
-  text?: string; // Text content for text boxes
-  position?: { x: number; y: number }; // Text position for text boxes
-  fontSize?: number; // Font size for text boxes
-  fontFamily?: string; // Font family for text boxes
-  // Add other relevant properties for both types as needed
-}
 
 // Define the type for strokes
 interface StrokesContextType {

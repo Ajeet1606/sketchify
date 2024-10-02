@@ -151,36 +151,24 @@ const SketchCanvas = () => {
     }
     switch (e.key) {
       case "1":
-        updateMode(ModeEnum.SCROLL);
-        updateCursorStyle("grab");
-        break;
-      case "2":
         updateMode(ModeEnum.DRAW);
         updateCursorStyle("crosshair");
         break;
-      case "3":
-        updateMode(ModeEnum.SQUARE);
-        updateCursorStyle("crosshair");
-        break;
-      case "4":
-        updateMode(ModeEnum.CURSOR);
-        updateCursorStyle("default");
-        break;
-      case "5":
-        updateMode(ModeEnum.ARROW);
-        updateCursorStyle("crosshair");
-        break;
-      case "6":
-        updateMode(ModeEnum.LINE);
-        updateCursorStyle("crosshair");
-        break;
-      case "7":
+      case "2":
         updateMode(ModeEnum.WRITE);
         updateCursorStyle("text");
         break;
-      case "8":
+      case "3":
         updateMode(ModeEnum.ERASE);
         updateCursorStyle("pointer");
+        break;
+      case "4":
+        updateMode(ModeEnum.SCROLL);
+        updateCursorStyle("grab");
+        break;
+      case "5":
+        updateMode(ModeEnum.CURSOR);
+        updateCursorStyle("default");
         break;
       default:
         break;

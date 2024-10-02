@@ -1,9 +1,20 @@
-import { Stroke } from "@/context/StrokesContext";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+// Add this to the strokes array in the context provider
+export interface Stroke {
+  type: "draw" | "erase" | "text"; // Add 'text' as a type
+  path?: string; // Path for freehand strokes
+  color: string; // Color for freehand strokes
+  text?: string; // Text content for text boxes
+  position?: { x: number; y: number }; // Text position for text boxes
+  fontSize?: number; // Font size for text boxes
+  fontFamily?: string; // Font family for text boxes
+  // Add other relevant properties for both types as needed
 }
 
 export interface Point {
@@ -25,7 +36,7 @@ export const options = {
     cap: true,
   },
   end: {
-    taper: 0, //edge sharpness
+    taper: 100, //edge sharpness
     easing: (t: number) => t,
     cap: true,
   },
