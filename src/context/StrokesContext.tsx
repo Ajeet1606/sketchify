@@ -1,5 +1,11 @@
 // StrokesContext.tsx
-import { doesIntersect, Mode, ModeEnum, strokeColorsEnum } from "@/lib/utils";
+import {
+  doesIntersect,
+  eraseTextStrokes,
+  Mode,
+  ModeEnum,
+  strokeColorsEnum,
+} from "@/lib/utils";
 import React, {
   createContext,
   useContext,
@@ -9,9 +15,15 @@ import React, {
 } from "react";
 
 // Add this to the strokes array in the context provider
-interface Stroke {
-  path: string;
-  color: string;
+export interface Stroke {
+  type: "draw" | "erase" | "text"; // Add 'text' as a type
+  path?: string; // Path for freehand strokes
+  color: string; // Color for freehand strokes
+  text?: string; // Text content for text boxes
+  position?: { x: number; y: number }; // Text position for text boxes
+  fontSize?: number; // Font size for text boxes
+  fontFamily?: string; // Font family for text boxes
+  // Add other relevant properties for both types as needed
 }
 
 // Define the type for strokes
@@ -110,9 +122,13 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const eraseStroke = (erasePoints: number[][]) => {
     setStrokes((prevStrokes) => {
-      return prevStrokes.filter(
-        (stroke) => !doesIntersect(stroke.path, erasePoints) // Remove strokes that overlap with the eraser path
-      );
+      return prevStrokes.filter((stroke) => {
+        // If it's a drawing stroke, check the path
+        if (stroke.path) {
+          return !doesIntersect(stroke.path, erasePoints);
+        }
+        return eraseTextStrokes(stroke, erasePoints);
+      });
     });
   };
 
@@ -168,7 +184,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
         undoStroke,
         redoStroke,
         eraseStroke,
-        updateScale
+        updateScale,
       }}
     >
       {children}

@@ -1,14 +1,9 @@
+import { Stroke } from "@/context/StrokesContext";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
-}
-
-export interface TextBox {
-  x: number;
-  y: number;
-  text: string;
 }
 
 export interface Point {
@@ -69,7 +64,6 @@ export function doesIntersect(
       }
     }
   }
-
   return false;
 }
 
@@ -78,6 +72,53 @@ function getDistance(point1: number[], point2: number[]): number {
   const [x1, y1] = point1;
   const [x2, y2] = point2;
   return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
+}
+
+export function eraseTextStrokes(
+  stroke: Stroke,
+  erasePoints: number[][],
+  threshold = 20
+) {
+  // If it's a text stroke, check for intersection based on its properties
+  if (stroke.position && stroke.text) {
+    const { position, text, fontSize } = stroke;
+
+    // Calculate the text bounding box
+    const textWidth = measureTextWidth(text, fontSize!);
+    const textHeight = fontSize!; // Approximation, height is typically close to the font size
+
+    // Define the bounds of the text stroke
+    const bounds = {
+      left: position.x,
+      right: position.x + textWidth,
+      top: position.y,
+      bottom: position.y + textHeight,
+    };
+
+    // Check if any eraser point intersects the text bounding box
+    for (const eraserPoint of erasePoints) {
+      if (
+        eraserPoint[0] >= bounds.left - threshold &&
+        eraserPoint[0] <= bounds.right + threshold &&
+        eraserPoint[1] >= bounds.top - threshold &&
+        eraserPoint[1] <= bounds.bottom + threshold
+      ) {
+        return false; // Remove stroke if it intersects
+      }
+    }
+  }
+
+  return true; // Keep the stroke if no intersection is found
+}
+
+// Utility function to measure text width
+function measureTextWidth(text: string, fontSize: number): number {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  if (!context) return 0;
+
+  context.font = `${fontSize}px Arial`; // Specify the font to use
+  return context.measureText(text).width; // Measure the width of the text
 }
 
 // Helper function to parse the SVG path string into an array of points

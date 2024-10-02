@@ -2,7 +2,7 @@ import { getStroke } from "perfect-freehand";
 import { getSvgPathFromStroke, ModeEnum } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { useStrokes } from "@/context/StrokesContext";
-import { options, Point, TextBox } from "@/lib/utils";
+import { options, Point} from "@/lib/utils";
 
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
@@ -11,9 +11,7 @@ const SketchCanvas = () => {
   const [isWritingText, setIsWritingText] = useState(false);
   const [textBoxPosition, setTextBoxPosition] = useState({ x: 0, y: 0 });
   const [textValue, setTextValue] = useState("");
-  const [textBoxes, setTextBoxes] = useState<TextBox[]>([]);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  console.log("text boxes", textBoxes);
 
   const {
     mode,
@@ -36,21 +34,22 @@ const SketchCanvas = () => {
 
   // Handle when user clicks outside the text box (to finalize the text)
   const handleCanvasClickOutside = () => {
-    console.log("click outside");
-
     if (isWritingText && textValue.trim() !== "") {
-      setTextBoxes((prevTextBoxes) => [
-        ...prevTextBoxes,
-        { x: textBoxPosition.x, y: textBoxPosition.y, text: textValue },
-      ]);
+      addStroke({
+        type: "text",
+        // path: "",
+        color: strokeColor,
+        text: textValue,
+        position: textBoxPosition,
+        fontSize: 18, // You can set font size dynamically based on user input
+        fontFamily: "Arial", // You can allow customization for the font family as well
+      });
       setTextValue(""); // Reset input
       setIsWritingText(false); // Close input
     }
   };
 
   const handleTextInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log("handle text input");
-
     setTextValue(e.target.value);
   };
 
@@ -63,8 +62,6 @@ const SketchCanvas = () => {
   }, [isWritingText, textValue]);
 
   function handlePointerDown(e: React.PointerEvent<HTMLCanvasElement>) {
-    console.log("pointer down");
-
     if (mode === ModeEnum.WRITE) {
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -133,6 +130,7 @@ const SketchCanvas = () => {
       eraseStroke(erasePoints);
     } else if (mode === ModeEnum.DRAW) {
       addStroke({
+        type: "draw",
         path: newStrokePath,
         color: strokeColor,
       });
@@ -206,9 +204,16 @@ const SketchCanvas = () => {
 
     //draw all strokes.
     strokes.forEach((stroke) => {
-      const path = new Path2D(stroke.path);
-      ctx.fillStyle = stroke.color;
-      ctx.fill(path);
+      if (stroke.type === "draw") {
+        const path = new Path2D(stroke.path);
+        ctx.fillStyle = stroke.color;
+        ctx.fill(path);
+      } else if (stroke.type === "text") {
+        ctx.font = `${stroke.fontSize}px ${stroke.fontFamily}`;
+        ctx.fillStyle = stroke.color;
+        ctx.textBaseline = "top";
+        ctx.fillText(stroke.text!, stroke.position!.x, stroke.position!.y);
+      }
     });
 
     //draw the current stroke
@@ -225,18 +230,6 @@ const SketchCanvas = () => {
       ctx.fill(path);
     }
 
-    // Draw text boxes
-    textBoxes.forEach((box) => {
-      // Set font style
-      ctx.font = "bold 18px 'Arial', sans-serif"; 
-      ctx.fillStyle = "black"; // Text color
-
-      // Render the text on top of the background
-      ctx.fillStyle = "black"; // Reset text color
-      ctx.textBaseline = "top"; // Align text from the top
-      ctx.fillText(box.text, box.x, box.y);
-    });
-
     ctx.restore();
   };
 
@@ -249,16 +242,14 @@ const SketchCanvas = () => {
         drawStrokesOnCanvas(ctx);
       }
     }
-  }, [strokes, points, panOffset, scale, textBoxes]);
+  }, [strokes, points, panOffset, scale]);
 
   // Set focus to the textarea manually after rendering
   useEffect(() => {
     if (isWritingText && textAreaRef.current) {
-      console.log("set focus called.");
       textAreaRef.current.focus(); // Manually focus the textarea
     }
   }, [isWritingText]); // This runs every time `isWritingText` changes
-  console.log("isWritingText: ", isWritingText);
 
   return (
     <div>
@@ -284,6 +275,7 @@ const SketchCanvas = () => {
             height: "50px",
             zIndex: 10,
             border: "none",
+            color: strokeColor
           }}
           ref={textAreaRef}
           value={textValue}
