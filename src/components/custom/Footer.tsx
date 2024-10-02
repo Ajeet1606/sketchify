@@ -15,7 +15,7 @@ const Footer = () => {
       <div className="flex gap-3 md:gap-4">
         <div className="flex gap-3 md:gap-4 items-center">
           <div className="flex space-x-2">
-            <Button onClick={() => handleZoom(false)}>
+            <Button onClick={() => handleZoom(false)} variant="default">
               <ZoomOut className="w-4 h-4 bg-inherit" />
             </Button>
             <Button>{(scale * 100).toFixed(0)}%</Button>

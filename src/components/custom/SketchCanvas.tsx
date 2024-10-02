@@ -153,6 +153,7 @@ const SketchCanvas = () => {
       case "1":
         updateMode(ModeEnum.DRAW);
         updateCursorStyle("crosshair");
+        setIsWritingText(false);
         break;
       case "2":
         updateMode(ModeEnum.WRITE);

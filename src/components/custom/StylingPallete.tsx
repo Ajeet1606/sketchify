@@ -1,6 +1,6 @@
 import { useStrokes } from "@/context/StrokesContext";
 import { strokeColors, strokeWidths } from "@/lib/utils";
-import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
+import { CheckCircle } from "lucide-react";
 
 const StylingPallete = () => {
   const { updateStrokeColor, strokeColor, updateStrokeWidth, strokeWidth } =
@@ -19,14 +19,7 @@ const StylingPallete = () => {
               onClick={() => updateStrokeColor(color)}
             >
               {strokeColor === color && (
-                <CheckCircleOutlineOutlinedIcon
-                  sx={{
-                    background: "none",
-                    padding: 0,
-                    margin: 0,
-                    color: "white",
-                  }}
-                />
+                <CheckCircle className="w-5 h-5 bg-inherit text-white"/>
               )}
             </span>
           ))}
