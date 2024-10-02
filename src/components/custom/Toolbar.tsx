@@ -36,42 +36,46 @@ const Toolbar = () => {
 
   return (
     <div className="bg-white py-3 px-4 rounded-md border mt-2 shadow-md">
-      <div className="flex space-x-2">
-        <Button
-          variant={mode === ModeEnum.DRAW ? "default" : "outline"}
-          onClick={() => handleModeChange(ModeEnum.DRAW)}
-        >
-          <Pencil className="w-4 h-4 mr-1 bg-inherit" />
-          <span className="text-sm -mb-3">1</span>
-        </Button>
-        <Button
-          variant={mode === ModeEnum.WRITE ? "default" : "outline"}
-          onClick={() => handleModeChange(ModeEnum.WRITE)}
-        >
-          <Type className="w-4 h-4 mr-1 bg-inherit" />
-          <span className="text-sm -mb-3">2</span>
-        </Button>
-        <Button
-          variant={mode === ModeEnum.ERASE ? "default" : "outline"}
-          onClick={() => handleModeChange(ModeEnum.ERASE)}
-        >
-          <Eraser className="w-4 h-4 mr-1 bg-inherit" />
-          <span className="text-sm -mb-3">3</span>
-        </Button>
-        <Button
-          variant={mode === ModeEnum.SCROLL ? "default" : "outline"}
-          onClick={() => handleModeChange(ModeEnum.SCROLL)}
-        >
-          <Move className="w-4 h-4 mr-1 bg-inherit" />
-          <span className="text-sm -mb-3">4</span>
-        </Button>
-        <Button
-          variant={mode === ModeEnum.CURSOR ? "default" : "outline"}
-          onClick={() => handleModeChange(ModeEnum.CURSOR)}
-        >
-          <MousePointer className="w-4 h-4 mr-1 bg-inherit" />
-          <span className="text-sm -mb-3">5</span>
-        </Button>
+      <div className="space-x-2 md:flex">
+        <div className="flex justify-center gap-2 mb-2 md:mb-0">
+          <Button
+            variant={mode === ModeEnum.DRAW ? "default" : "outline"}
+            onClick={() => handleModeChange(ModeEnum.DRAW)}
+          >
+            <Pencil className="w-4 h-4 mr-1 bg-inherit" />
+            <span className="text-sm -mb-3">1</span>
+          </Button>
+          <Button
+            variant={mode === ModeEnum.WRITE ? "default" : "outline"}
+            onClick={() => handleModeChange(ModeEnum.WRITE)}
+          >
+            <Type className="w-4 h-4 mr-1 bg-inherit" />
+            <span className="text-sm -mb-3">2</span>
+          </Button>
+          <Button
+            variant={mode === ModeEnum.ERASE ? "default" : "outline"}
+            onClick={() => handleModeChange(ModeEnum.ERASE)}
+          >
+            <Eraser className="w-4 h-4 mr-1 bg-inherit" />
+            <span className="text-sm -mb-3">3</span>
+          </Button>
+        </div>
+        <div className="flex justify-center gap-2">
+          <Button
+            variant={mode === ModeEnum.SCROLL ? "default" : "outline"}
+            onClick={() => handleModeChange(ModeEnum.SCROLL)}
+          >
+            <Move className="w-4 h-4 mr-1 bg-inherit" />
+            <span className="text-sm -mb-3">4</span>
+          </Button>
+          <Button
+            variant={mode === ModeEnum.CURSOR ? "default" : "outline"}
+            onClick={() => handleModeChange(ModeEnum.CURSOR)}
+          >
+            <MousePointer className="w-4 h-4 mr-1 bg-inherit" />
+            <span className="text-sm -mb-3">5</span>
+          </Button>
+        </div>
       </div>
     </div>
   );
