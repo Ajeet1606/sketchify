@@ -13,17 +13,18 @@ import {
 import StylingPallete from "./StylingPallete";
 
 const Footer = () => {
-  const { undoStroke, redoStroke, handleZoomIn, handleZoomOut, scale } =
-    useStrokes();
+  const { undoStroke, redoStroke, handleZoom, scale } = useStrokes();
   return (
     <div className="flex justify-center items-center gap-2 md:gap-4 px-2 md:px-6 py-4 w-full select-none cursor-default z-10">
       <div className="flex gap-2 md:gap-4">
         <div className="flex gap-3 md:gap-4 items-center bg-primary shadow rounded-md py-2 px-4">
-          <span className="cursor-pointer" onClick={() => handleZoomOut()}>
+          <span className="cursor-pointer" onClick={() => handleZoom(false)}>
             <RemoveIcon sx={{ background: "none", padding: 0, margin: 0 }} />
           </span>
-          <h3 className="text-base md:text-lg font-semibold">{(scale * 100).toFixed(0)}%</h3>
-          <span className="cursor-pointer" onClick={() => handleZoomIn()}>
+          <h3 className="text-base md:text-lg font-semibold">
+            {(scale * 100).toFixed(0)}%
+          </h3>
+          <span className="cursor-pointer" onClick={() => handleZoom(true)}>
             <AddIcon sx={{ background: "none", padding: 0, margin: 0 }} />
           </span>
         </div>

@@ -40,7 +40,7 @@ const Toolbar = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-6 px-2 py-2 md:px-6 md:py-3 md:h-16 border shadow-md rounded-md select-none cursor-default mt-3 z-10 ">
+    <div className="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-6 px-2 py-2 md:px-6 md:py-3 md:h-16 border shadow-md rounded-md select-none cursor-default mt-3 z-10 bg-white">
       <div className="flex items-center gap-4 md:gap-6">
         {/* scroll */}
         <h3

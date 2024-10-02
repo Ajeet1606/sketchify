@@ -1,6 +1,12 @@
 // StrokesContext.tsx
 import { doesIntersect, Mode, ModeEnum, strokeColorsEnum } from "@/lib/utils";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 // Add this to the strokes array in the context provider
 interface Stroke {
@@ -17,8 +23,8 @@ interface StrokesContextType {
   strokeColor: strokeColorsEnum;
   strokeWidth: number;
   scale: number;
-  handleZoomIn: () => void;
-  handleZoomOut: () => void;
+  panOffset: { x: number; y: number };
+  canvasRef: React.RefObject<HTMLCanvasElement>;
   updateCursorStyle: (cursorStyle: string) => void;
   updateMode: (mode: Mode) => void;
   addStroke: (newStroke: Stroke) => void;
@@ -27,6 +33,9 @@ interface StrokesContextType {
   eraseStroke: (erasePoints: number[][]) => void;
   updateStrokeColor: (strokeColor: strokeColorsEnum) => void;
   updateStrokeWidth: (strokeWidth: number) => void;
+  handleZoom: (zoomIn: boolean) => void;
+  updatePanOffset: (newOffset: { x: number; y: number }) => void;
+  updateScale: (newScale: number) => void;
 }
 
 // Create the context
@@ -45,6 +54,8 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
   );
   const [strokeWidth, setStrokeWidth] = useState<number>(10);
   const [scale, setScale] = useState(1); // Zoom level state
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 }); // Pan offset state
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Load strokes from localStorage when app starts
   useEffect(() => {
@@ -105,12 +116,34 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const handleZoomIn = () => {
-    setScale((prevScale) => Math.min(prevScale * 1.2, 5)); // Max scale limit of 5
+  const updatePanOffset = (newOffset: { x: number; y: number }) => {
+    setPanOffset(newOffset);
   };
 
-  const handleZoomOut = () => {
-    setScale((prevScale) => Math.max(prevScale * 0.8, 0.2)); // Min scale limit of 0.2
+  const updateScale = (newScale: number) => {
+    setScale(newScale);
+  };
+
+  // Function to handle zoom with proper centering
+  const handleZoom = (zoomIn: boolean) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+
+    const zoomFactor = 0.1; // Zoom in or out by 10%
+    const newScale = zoomIn ? scale + zoomFactor : scale - zoomFactor;
+
+    // Calculate the center of the canvas
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    // Adjust panOffset to ensure the content remains centered during zoom
+    const newOffsetX = centerX - ((centerX - panOffset.x) / scale) * newScale;
+    const newOffsetY = centerY - ((centerY - panOffset.y) / scale) * newScale;
+
+    setPanOffset({ x: newOffsetX, y: newOffsetY });
+    setScale(newScale);
   };
 
   return (
@@ -123,8 +156,10 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
         strokeColor,
         strokeWidth,
         scale,
-        handleZoomIn,
-        handleZoomOut,
+        panOffset,
+        canvasRef,
+        updatePanOffset,
+        handleZoom,
         updateStrokeWidth,
         updateStrokeColor,
         updateCursorStyle,
@@ -133,6 +168,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
         undoStroke,
         redoStroke,
         eraseStroke,
+        updateScale
       }}
     >
       {children}

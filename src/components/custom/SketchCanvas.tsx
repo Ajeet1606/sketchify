@@ -2,39 +2,18 @@ import { getStroke } from "perfect-freehand";
 import { getSvgPathFromStroke, ModeEnum } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { useStrokes } from "@/context/StrokesContext";
-
-// Define the options object for perfect-freehand
-const options = {
-  size: 2,
-  thinning: 0.5,
-  smoothing: 0.5,
-  streamline: 0.5,
-  easing: (t: number) => t,
-  start: {
-    taper: 0,
-    easing: (t: number) => t,
-    cap: true,
-  },
-  end: {
-    taper: 0, //edge sharpness
-    easing: (t: number) => t,
-    cap: true,
-  },
-};
-
-interface Point {
-  x: number;
-  y: number;
-  pressure: number;
-}
+import { options, Point, TextBox } from "@/lib/utils";
 
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
-  //const [scale, setScale] = useState(1); // Zoom level state
-  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 }); // Pan offset state
   const [isPanning, setIsPanning] = useState(false);
   const [startPan, setStartPan] = useState({ x: 0, y: 0 });
-  const svgRef = useRef<SVGSVGElement>(null);
+  const [isWritingText, setIsWritingText] = useState(false);
+  const [textBoxPosition, setTextBoxPosition] = useState({ x: 0, y: 0 });
+  const [textValue, setTextValue] = useState("");
+  const [textBoxes, setTextBoxes] = useState<TextBox[]>([]);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  console.log("text boxes", textBoxes);
 
   const {
     mode,
@@ -42,38 +21,80 @@ const SketchCanvas = () => {
     strokeColor,
     strokeWidth,
     scale,
+    panOffset,
+    canvasRef,
+    cursorStyle,
     addStroke,
     eraseStroke,
     undoStroke,
     redoStroke,
     updateMode,
-    cursorStyle,
     updateCursorStyle,
+    updatePanOffset,
   } = useStrokes();
-
   options.size = strokeWidth;
 
-  function handlePointerDown(e: React.PointerEvent<SVGSVGElement>) {
-    if (mode === ModeEnum.SCROLL) {
+  // Handle when user clicks outside the text box (to finalize the text)
+  const handleCanvasClickOutside = () => {
+    console.log("click outside");
+
+    if (isWritingText && textValue.trim() !== "") {
+      setTextBoxes((prevTextBoxes) => [
+        ...prevTextBoxes,
+        { x: textBoxPosition.x, y: textBoxPosition.y, text: textValue },
+      ]);
+      setTextValue(""); // Reset input
+      setIsWritingText(false); // Close input
+    }
+  };
+
+  const handleTextInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log("handle text input");
+
+    setTextValue(e.target.value);
+  };
+
+  // Handle pointer up for finalizing text input
+  useEffect(() => {
+    window.addEventListener("click", handleCanvasClickOutside);
+    return () => {
+      window.removeEventListener("click", handleCanvasClickOutside);
+    };
+  }, [isWritingText, textValue]);
+
+  function handlePointerDown(e: React.PointerEvent<HTMLCanvasElement>) {
+    console.log("pointer down");
+
+    if (mode === ModeEnum.WRITE) {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left - panOffset.x) / scale;
+      const y = (e.clientY - rect.top - panOffset.y) / scale;
+
+      // Set text box position
+      setTextBoxPosition({ x, y });
+      setIsWritingText(true); // Open input box
+    } else if (mode === ModeEnum.SCROLL) {
       // Pan mode
       setIsPanning(true);
       setStartPan({ x: e.clientX - panOffset.x, y: e.clientY - panOffset.y });
     } else {
       // Drawing mode
-      e.currentTarget.setPointerCapture(e.pointerId);
-      const svg = svgRef.current;
-      if (svg) {
-        const rect = svg.getBoundingClientRect(); // Get the SVG dimensions
-        const scaledX = (e.clientX - rect.left - panOffset.x) / scale; // Adjust for scaling and panning
-        const scaledY = (e.clientY - rect.top - panOffset.y) / scale; // Adjust for scaling and panning
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const rect = canvas.getBoundingClientRect();
+        const scaledX = (e.clientX - rect.left - panOffset.x) / scale;
+        const scaledY = (e.clientY - rect.top - panOffset.y) / scale;
         setPoints([{ x: scaledX, y: scaledY, pressure: e.pressure }]);
       }
     }
   }
 
-  function handlePointerMove(e: React.PointerEvent<SVGSVGElement>) {
+  function handlePointerMove(e: React.PointerEvent<HTMLCanvasElement>) {
     if (mode === ModeEnum.SCROLL && isPanning) {
-      setPanOffset({
+      updatePanOffset({
         x: e.clientX - startPan.x,
         y: e.clientY - startPan.y,
       });
@@ -81,13 +102,13 @@ const SketchCanvas = () => {
     }
 
     if (e.buttons !== 1) return; // Ensure the left mouse button is pressed
-    const svg = svgRef.current;
-    if (svg) {
-      const rect = svg.getBoundingClientRect(); // Get the SVG dimensions
-      const scaledX = (e.clientX - rect.left - panOffset.x) / scale; // Adjust for scaling and panning
-      const scaledY = (e.clientY - rect.top - panOffset.y) / scale; // Adjust for scaling and panning
-      setPoints((prevPoints) => [
-        ...prevPoints,
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const scaledX = (e.clientX - rect.left - panOffset.x) / scale;
+      const scaledY = (e.clientY - rect.top - panOffset.y) / scale;
+      setPoints((prev) => [
+        ...prev,
         { x: scaledX, y: scaledY, pressure: e.pressure },
       ]);
     }
@@ -176,42 +197,101 @@ const SketchCanvas = () => {
     };
   }, []);
 
+  // Function to redraw the canvas with strokes
+  const drawStrokesOnCanvas = (ctx: CanvasRenderingContext2D) => {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.save();
+    ctx.scale(scale, scale);
+    ctx.translate(panOffset.x, panOffset.y);
+
+    //draw all strokes.
+    strokes.forEach((stroke) => {
+      const path = new Path2D(stroke.path);
+      ctx.fillStyle = stroke.color;
+      ctx.fill(path);
+    });
+
+    //draw the current stroke
+    if (points.length > 0 && mode === ModeEnum.DRAW) {
+      const path = new Path2D(
+        getSvgPathFromStroke(
+          getStroke(
+            points.map((p) => [p.x, p.y, p.pressure]),
+            { size: strokeWidth }
+          )
+        )
+      );
+      ctx.fillStyle = strokeColor;
+      ctx.fill(path);
+    }
+
+    // Draw text boxes
+    textBoxes.forEach((box) => {
+      // Set font style
+      ctx.font = "bold 18px 'Arial', sans-serif"; 
+      ctx.fillStyle = "black"; // Text color
+
+      // Render the text on top of the background
+      ctx.fillStyle = "black"; // Reset text color
+      ctx.textBaseline = "top"; // Align text from the top
+      ctx.fillText(box.text, box.x, box.y);
+    });
+
+    ctx.restore();
+  };
+
+  // Redraw canvas whenever strokes or pan/zoom changes
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        drawStrokesOnCanvas(ctx);
+      }
+    }
+  }, [strokes, points, panOffset, scale, textBoxes]);
+
+  // Set focus to the textarea manually after rendering
+  useEffect(() => {
+    if (isWritingText && textAreaRef.current) {
+      console.log("set focus called.");
+      textAreaRef.current.focus(); // Manually focus the textarea
+    }
+  }, [isWritingText]); // This runs every time `isWritingText` changes
+  console.log("isWritingText: ", isWritingText);
+
   return (
     <div>
-      <svg
-        ref={svgRef}
+      <canvas
+        ref={canvasRef}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp} // Track when the drawing is finished
-        cursor={cursorStyle}
-        style={{
-          touchAction: "none",
-          width: "100%",
-          height: "100vh",
-        }}
-        viewBox={`${-panOffset.x} ${-panOffset.y} ${
-          window.innerWidth / scale
-        } ${window.innerHeight / scale}`} // Apply pan/zoom
-      >
-        {/* Render all saved strokes */}
-        {strokes.map((stroke, index) => (
-          <path key={index} d={stroke.path} fill={stroke.color} stroke="none" />
-        ))}
+        onPointerUp={handlePointerUp}
+        width={window.innerWidth}
+        height={window.innerHeight}
+        style={{ cursor: cursorStyle, touchAction: "none" }}
+      />
 
-        {/* Render the current stroke */}
-        {points.length > 0 && mode === ModeEnum.DRAW && (
-          <path
-            d={getSvgPathFromStroke(
-              getStroke(
-                points.map((p) => [p.x, p.y, p.pressure]),
-                options
-              )
-            )}
-            fill={strokeColor}
-            stroke="none"
-          />
-        )}
-      </svg>
+      {/* Text input box */}
+      {isWritingText && (
+        <textarea
+          style={{
+            position: "absolute",
+            left: textBoxPosition.x * scale + panOffset.x,
+            top: textBoxPosition.y * scale + panOffset.y,
+            fontSize: "16px",
+            width: "200px",
+            height: "50px",
+            zIndex: 10,
+            border: "none",
+          }}
+          ref={textAreaRef}
+          value={textValue}
+          onChange={handleTextInput}
+          onClick={(e) => e.stopPropagation()} // Prevent click propagation
+          autoFocus={true}
+        />
+      )}
     </div>
   );
 };

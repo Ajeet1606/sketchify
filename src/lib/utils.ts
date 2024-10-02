@@ -5,6 +5,37 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export interface TextBox {
+  x: number;
+  y: number;
+  text: string;
+}
+
+export interface Point {
+  x: number;
+  y: number;
+  pressure: number;
+}
+
+// Define the options object for perfect-freehand
+export const options = {
+  size: 2,
+  thinning: 0.5,
+  smoothing: 0.5,
+  streamline: 0.5,
+  easing: (t: number) => t,
+  start: {
+    taper: 0,
+    easing: (t: number) => t,
+    cap: true,
+  },
+  end: {
+    taper: 0, //edge sharpness
+    easing: (t: number) => t,
+    cap: true,
+  },
+};
+
 export function getSvgPathFromStroke(stroke: number[][]): string {
   if (!stroke.length) return "";
 
