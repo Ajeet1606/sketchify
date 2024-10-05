@@ -1,7 +1,7 @@
 
 const Info = () => {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 max-w-[80%] mx-auto">
+    <div className="bg-white rounded-lg shadow-lg border p-6 max-w-[80%] mx-auto">
       <div className="flex items-center justify-center mb-4">
         <img
           src="/logo.png"
@@ -15,7 +15,7 @@ const Info = () => {
       <p className="text-center text-gray-600 mb-2 md:mb-4">
         All your data is saved locally in your browser.
       </p>
-      <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-3">
+      <h3 className="text-lg text-center md:text-xl font-semibold text-gray-800 mb-3">
         Common commands you can use:
       </h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">

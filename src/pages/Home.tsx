@@ -7,7 +7,7 @@ import { ModeEnum } from "@/lib/utils";
 const Home = () => {
   const { mode, strokes } = useStrokes();
   return (
-    <div className="h-screen overflow-hidden font-sans">
+    <div className="h-[100vh] overflow-hidden font-sans">
       <div className="absolute flex justify-center w-full top-0">
         <Toolbar />
       </div>
