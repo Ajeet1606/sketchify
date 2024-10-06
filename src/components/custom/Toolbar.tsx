@@ -55,6 +55,7 @@ const Toolbar = () => {
           // onClick={() => handleModeChange(ModeEnum.WRITE)}
           onClick={() => {
             toast({
+              variant: "destructive",
               title: "Text mode is coming soon!",
             });
           }}

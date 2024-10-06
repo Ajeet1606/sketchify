@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useStrokes } from "@/context/StrokesContext";
 import { options, Point } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { Textarea } from "@/components/ui/textarea"
 
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
@@ -170,6 +171,7 @@ const SketchCanvas = () => {
       case "2":
         // useCallback(() => {
           toast({
+            variant: "destructive",
             title: "Text mode is coming soon!",
           });
         // }, []);
@@ -276,7 +278,7 @@ const SketchCanvas = () => {
 
       {/* Text input box */}
       {isWritingText && (
-        <textarea
+        <Textarea
           style={{
             position: "absolute",
             left: textBoxPosition.x + panOffset.x,
@@ -291,7 +293,7 @@ const SketchCanvas = () => {
           ref={textAreaRef}
           value={textValue}
           onChange={handleTextInput}
-          // onClick={(e) => e.stopPropagation()} // Prevent click propagation
+          onClick={(e) => e.stopPropagation()} // Prevent click propagation
           autoFocus={true}
         />
       )}
