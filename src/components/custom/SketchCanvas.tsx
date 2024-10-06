@@ -2,7 +2,8 @@ import { getStroke } from "perfect-freehand";
 import { getSvgPathFromStroke, ModeEnum } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { useStrokes } from "@/context/StrokesContext";
-import { options, Point} from "@/lib/utils";
+import { options, Point } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
@@ -11,7 +12,8 @@ const SketchCanvas = () => {
   const [isWritingText, setIsWritingText] = useState(false);
   const [textBoxPosition, setTextBoxPosition] = useState({ x: 0, y: 0 });
   const [textValue, setTextValue] = useState("");
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+  const { toast } = useToast();
 
   const {
     mode,
@@ -29,6 +31,7 @@ const SketchCanvas = () => {
     updateMode,
     updateCursorStyle,
     updatePanOffset,
+    clearCanvas,
   } = useStrokes();
   options.size = strokeWidth;
 
@@ -41,11 +44,11 @@ const SketchCanvas = () => {
         color: strokeColor,
         text: textValue,
         position: textBoxPosition,
-        fontSize: 18, // You can set font size dynamically based on user input
-        fontFamily: "Arial", // You can allow customization for the font family as well
+        fontSize: 18,
+        fontFamily: "sans",
       });
-      setTextValue(""); // Reset input
-      setIsWritingText(false); // Close input
+      setTextValue("");
+      setIsWritingText(false);
     }
   };
 
@@ -139,6 +142,11 @@ const SketchCanvas = () => {
   }
 
   const handleKeyDown = (e: KeyboardEvent) => {
+    const activeElement = document.activeElement;
+    if (activeElement?.tagName === "TEXTAREA" || isWritingText) {
+      return; // Do not switch modes if the user is typing
+    }
+
     if ((e.ctrlKey || e.metaKey) && e.key === "z") {
       e.preventDefault();
       undoStroke();
@@ -149,27 +157,39 @@ const SketchCanvas = () => {
       redoStroke();
       return;
     }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "X") {
+      clearCanvas();
+      return;
+    }
     switch (e.key) {
       case "1":
         updateMode(ModeEnum.DRAW);
         updateCursorStyle("crosshair");
-        setIsWritingText(false);
+        handleCanvasClickOutside();
         break;
       case "2":
-        updateMode(ModeEnum.WRITE);
-        updateCursorStyle("text");
+        // useCallback(() => {
+          toast({
+            title: "Text mode is coming soon!",
+          });
+        // }, []);
+        // updateMode(ModeEnum.WRITE);
+        // updateCursorStyle("text");
         break;
       case "3":
         updateMode(ModeEnum.ERASE);
         updateCursorStyle("pointer");
+        handleCanvasClickOutside();
         break;
       case "4":
         updateMode(ModeEnum.SCROLL);
         updateCursorStyle("grab");
+        handleCanvasClickOutside();
         break;
       case "5":
         updateMode(ModeEnum.CURSOR);
         updateCursorStyle("default");
+        handleCanvasClickOutside();
         break;
       default:
         break;
@@ -236,7 +256,9 @@ const SketchCanvas = () => {
   // Set focus to the textarea manually after rendering
   useEffect(() => {
     if (isWritingText && textAreaRef.current) {
-      textAreaRef.current.focus(); // Manually focus the textarea
+      setTimeout(() => {
+        textAreaRef.current?.focus();
+      }, 10);
     }
   }, [isWritingText]); // This runs every time `isWritingText` changes
 
@@ -257,19 +279,19 @@ const SketchCanvas = () => {
         <textarea
           style={{
             position: "absolute",
-            left: textBoxPosition.x * scale + panOffset.x,
-            top: textBoxPosition.y * scale + panOffset.y,
+            left: textBoxPosition.x + panOffset.x,
+            top: textBoxPosition.y + panOffset.y,
             fontSize: "16px",
             width: "200px",
             height: "50px",
             zIndex: 10,
             border: "none",
-            color: strokeColor
+            color: strokeColor,
           }}
           ref={textAreaRef}
           value={textValue}
           onChange={handleTextInput}
-          onClick={(e) => e.stopPropagation()} // Prevent click propagation
+          // onClick={(e) => e.stopPropagation()} // Prevent click propagation
           autoFocus={true}
         />
       )}

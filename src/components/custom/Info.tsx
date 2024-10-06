@@ -26,6 +26,7 @@ const Info = () => {
         <CommandItem command="Press 5" action="Cursor" />
         <CommandItem command="Ctrl + Z" action="Undo" />
         <CommandItem command="Ctrl + Y" action="Redo" />
+        <CommandItem command="Ctrl + Shift + X" action="Clear all" />
       </div>
       <p className="text-center text-gray-600">
         You can change the color and width of your strokes from the palette

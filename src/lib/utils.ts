@@ -36,7 +36,7 @@ export const options = {
     cap: true,
   },
   end: {
-    taper: 100, //edge sharpness
+    taper: 0, //edge sharpness
     easing: (t: number) => t,
     cap: true,
   },

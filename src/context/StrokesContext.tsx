@@ -37,6 +37,7 @@ interface StrokesContextType {
   handleZoom: (zoomIn: boolean) => void;
   updatePanOffset: (newOffset: { x: number; y: number }) => void;
   updateScale: (newScale: number) => void;
+  clearCanvas: () => void;
 }
 
 // Create the context
@@ -151,6 +152,11 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
     setScale(newScale);
   };
 
+  const clearCanvas = () => {
+    setStrokes([]);
+    setUndoneStrokes([]);
+  };
+
   return (
     <StrokesContext.Provider
       value={{
@@ -174,6 +180,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
         redoStroke,
         eraseStroke,
         updateScale,
+        clearCanvas,
       }}
     >
       {children}
