@@ -1,50 +1,50 @@
-# React + TypeScript + Vite
+# SketchifyMe
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+I always wanted to build something over canvas like Excalidraw so created this fun project which is a feature rich free-hand sketching web application. It's under progress, I'll be creating all the cool imrovements mentioned below.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack 🚀
 
-## Expanding the ESLint configuration
+- ReactJS
+- Tailwind CSS
+- Shadcn
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Features ⭐
+- Fully responsive freehand writing with custom stroke color and width with Erase functionality
+- Custom Commands provided to handle different operations like Undo, Redo, Clear All and for switching between different modes.
+- Auto save sketches in local storage
+- Zoom and scroll functionality
 
-- Configure the top-level `parserOptions` property like this:
+## Installation 🛠️
+To get started with SketchifyMe, follow these steps:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Prerequisites
+- Yarn: A package manager to install dependencies.
+
+## Clone the Repository
+```
+git clone https://github.com/Ajeet1606/sketchify.git
+cd sketchify
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+## Install Dependencies
 ```
+Command: yarn
+```
+
+## Configuration ⚙️
+There's no complex config required, just install the dependencies and you can start the application using the following command:
+```
+yarn dev
+```
+
+## Improvements ⚒️
+- Add Text input
+- Proper pinch to zoom in/out & two finger scroll
+- Add different shapes drawing like Square, Line, Arrow etc.
+- Provide Image support
+- Export data as JPEG/PNG
+
+## Acknowledgments 🙏
+- [perfect-freehand](https://www.npmjs.com/package/perfect-freehand)
+- [shadcn](https://ui.shadcn.com/)
