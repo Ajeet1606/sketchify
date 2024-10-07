@@ -1,11 +1,11 @@
 import { useStrokes } from "@/context/StrokesContext";
 import { Mode, ModeEnum } from "@/lib/utils";
-import { Pencil, Type, Eraser, Move, MousePointer } from "lucide-react";
+import { Pencil, Type, Eraser, Move, MousePointer , Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 const Toolbar = () => {
-  const { updateMode, mode, updateCursorStyle } = useStrokes();
+  const { updateMode, mode, updateCursorStyle , downloadImage } = useStrokes();
   const { toast } = useToast();
   const handleModeChange = (newMode: Mode) => {
     const activeElement = document.activeElement;
@@ -85,6 +85,14 @@ const Toolbar = () => {
         >
           <MousePointer className="w-4 h-4 mr-1 bg-inherit" />
           <span className="text-sm -mb-3">5</span>
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={downloadImage} // Trigger the download on click
+        >
+          <Download className="w-4 h-4 mr-1 bg-inherit" />
+         
         </Button>
         {/* </div> */}
       </div>

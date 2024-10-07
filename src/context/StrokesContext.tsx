@@ -1,4 +1,5 @@
-// StrokesContext.tsx
+//StrokesContext.tsx
+
 import {
   doesIntersect,
   eraseTextStrokes,
@@ -38,6 +39,7 @@ interface StrokesContextType {
   updatePanOffset: (newOffset: { x: number; y: number }) => void;
   updateScale: (newScale: number) => void;
   clearCanvas: () => void;
+  downloadImage: () => void; // Expose the download functionality
 }
 
 // Create the context
@@ -86,6 +88,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateMode = (newMode: Mode) => {
     setMode(newMode);
   };
+
   // Function to add a new stroke
   const addStroke = (newStroke: Stroke) => {
     setStrokes((prevStrokes) => [...prevStrokes, newStroke]);
@@ -157,6 +160,35 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
     setUndoneStrokes([]);
   };
 
+  // Function to download the canvas content as an image
+  const downloadImage = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+  
+    const context = canvas.getContext("2d");
+    if (!context) return;
+  
+    const currentContent = context.getImageData(0, 0, canvas.width, canvas.height);
+  
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "white"; 
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  
+   
+    context.putImageData(currentContent, 0, 0);
+  
+    const image = canvas.toDataURL("image/png");
+  
+    const downloadLink = document.createElement("a");
+    downloadLink.href = image;
+    downloadLink.download = "canvas_image.png"; 
+    downloadLink.click();
+  
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.putImageData(currentContent, 0, 0);
+  };
+  
+
   return (
     <StrokesContext.Provider
       value={{
@@ -181,6 +213,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
         eraseStroke,
         updateScale,
         clearCanvas,
+        downloadImage, // Add download function to the context
       }}
     >
       {children}
