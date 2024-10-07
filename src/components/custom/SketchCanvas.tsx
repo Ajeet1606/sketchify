@@ -33,7 +33,6 @@ const SketchCanvas = () => {
     updateCursorStyle,
     updatePanOffset,
     clearCanvas,
-    downloadImage,
   } = useStrokes();
   options.size = strokeWidth;
 
@@ -144,17 +143,6 @@ const SketchCanvas = () => {
   }
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    console.log(
-      "Key:",
-      e.key,
-      "Ctrl:",
-      e.ctrlKey,
-      "Meta:",
-      e.metaKey,
-      "Shift:",
-      e.shiftKey
-    );
-
     const activeElement = document.activeElement;
     if (activeElement?.tagName === "TEXTAREA" || isWritingText) {
       return; // Do not switch modes if the user is typing
@@ -171,23 +159,15 @@ const SketchCanvas = () => {
       return;
     }
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toUpperCase() === "X") {
-      console.log("clearing canvas");
       e.preventDefault();
       clearCanvas();
       return;
     }
-    if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "S") {
-      e.preventDefault();
-      if (strokes.length === 0) {
-        toast({
-          variant: "destructive",
-          title: "Canvas is empty!",
-        });
-        return;
-      }
-      downloadImage();
-      return;
-    }
+    // if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "S") {
+    //   e.preventDefault();
+    //   downloadImage();
+    //   return;
+    // }
     switch (e.key) {
       case "1":
         updateMode(ModeEnum.DRAW);

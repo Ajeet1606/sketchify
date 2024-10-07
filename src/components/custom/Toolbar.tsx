@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 const Toolbar = () => {
-  const { updateMode, mode, updateCursorStyle, downloadImage, strokes } =
+  const { updateMode, mode, updateCursorStyle, downloadImage } =
     useStrokes();
   const { toast } = useToast();
   const handleModeChange = (newMode: Mode) => {
@@ -97,16 +97,7 @@ const Toolbar = () => {
 
         <Button
           variant="outline"
-          onClick={
-            strokes.length
-              ? downloadImage
-              : () => {
-                  toast({
-                    variant: "destructive",
-                    title: "Canvas is Empty!",
-                  });
-                }
-          } // Trigger the download on click
+          onClick={downloadImage} // Trigger the download on click
         >
           <Download className="w-4 h-4 mr-1 bg-inherit" />
         </Button>

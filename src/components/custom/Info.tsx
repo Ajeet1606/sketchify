@@ -26,7 +26,7 @@ const Info = () => {
         <CommandItem command="Press 5" action="Cursor" />
         <CommandItem command="Ctrl + Z" action="Undo" />
         <CommandItem command="Ctrl + Y" action="Redo" />
-        <CommandItem command="Ctrl + S" action="Save as Image" />
+        {/* <CommandItem command="Ctrl + S" action="Save as Image" /> */}
         <CommandItem command="Ctrl + Shift + X" action="Clear all" />
       </div>
       <p className="text-center text-gray-600">

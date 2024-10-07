@@ -15,6 +15,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 // Define the type for strokes
 interface StrokesContextType {
@@ -60,6 +61,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [scale, setScale] = useState(1); // Zoom level state
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 }); // Pan offset state
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { toast } = useToast();
 
   // Load strokes from localStorage when app starts
   useEffect(() => {
@@ -162,32 +164,42 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Function to download the canvas content as an image
   const downloadImage = () => {
+    if (strokes.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "Canvas is empty!",
+      });
+      return;
+    }
     const canvas = canvasRef.current;
     if (!canvas) return;
-  
+
     const context = canvas.getContext("2d");
     if (!context) return;
-  
-    const currentContent = context.getImageData(0, 0, canvas.width, canvas.height);
-  
+
+    const currentContent = context.getImageData(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = "white"; 
+    context.fillStyle = "white";
     context.fillRect(0, 0, canvas.width, canvas.height);
-  
-   
+
     context.putImageData(currentContent, 0, 0);
-  
+
     const image = canvas.toDataURL("image/png");
-  
+
     const downloadLink = document.createElement("a");
     downloadLink.href = image;
-    downloadLink.download = "canvas_image.png"; 
+    downloadLink.download = "canvas_image.png";
     downloadLink.click();
-  
+
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.putImageData(currentContent, 0, 0);
   };
-  
 
   return (
     <StrokesContext.Provider
