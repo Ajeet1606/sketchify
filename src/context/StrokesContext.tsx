@@ -25,6 +25,7 @@ interface StrokesContextType {
   cursorStyle: string;
   strokeColor: strokeColorsEnum;
   strokeWidth: number;
+  strokeTaper: number;
   scale: number;
   panOffset: { x: number; y: number };
   canvasRef: React.RefObject<HTMLCanvasElement>;
@@ -41,6 +42,7 @@ interface StrokesContextType {
   updateScale: (newScale: number) => void;
   clearCanvas: () => void;
   downloadImage: () => void; // Expose the download functionality
+  updateStrokeTaper: (strokeTaper: number) => void;
 }
 
 // Create the context
@@ -58,6 +60,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
     strokeColorsEnum.BLACK
   );
   const [strokeWidth, setStrokeWidth] = useState<number>(10);
+  const [strokeTaper, setStrokeTaper] = useState<number>(0);
   const [scale, setScale] = useState(1); // Zoom level state
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 }); // Pan offset state
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -91,6 +94,9 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
     setMode(newMode);
   };
 
+  const updateStrokeTaper = (newTaper: number) => {
+    setStrokeTaper(newTaper);
+  };
   // Function to add a new stroke
   const addStroke = (newStroke: Stroke) => {
     setStrokes((prevStrokes) => [...prevStrokes, newStroke]);
@@ -210,6 +216,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
         cursorStyle,
         strokeColor,
         strokeWidth,
+        strokeTaper,
         scale,
         panOffset,
         canvasRef,
@@ -225,7 +232,8 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
         eraseStroke,
         updateScale,
         clearCanvas,
-        downloadImage, // Add download function to the context
+        downloadImage,
+        updateStrokeTaper,
       }}
     >
       {children}

@@ -25,6 +25,7 @@ const SketchCanvas = () => {
     panOffset,
     canvasRef,
     cursorStyle,
+    strokeTaper,
     addStroke,
     eraseStroke,
     undoStroke,
@@ -34,7 +35,10 @@ const SketchCanvas = () => {
     updatePanOffset,
     clearCanvas,
   } = useStrokes();
-  options.size = strokeWidth;
+  useEffect(() => {
+    options.size = strokeWidth;
+    options.end.taper = strokeTaper;
+  }, [strokeTaper, strokeWidth]);
 
   // Handle when user clicks outside the text box (to finalize the text)
   const handleCanvasClickOutside = () => {
