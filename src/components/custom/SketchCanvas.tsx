@@ -33,6 +33,7 @@ const SketchCanvas = () => {
     updateCursorStyle,
     updatePanOffset,
     clearCanvas,
+    downloadImage,
   } = useStrokes();
   options.size = strokeWidth;
 
@@ -143,23 +144,32 @@ const SketchCanvas = () => {
   }
 
   const handleKeyDown = (e: KeyboardEvent) => {
+    console.log('Key:', e.key, 'Ctrl:', e.ctrlKey, 'Meta:', e.metaKey, 'Shift:', e.shiftKey);
+
     const activeElement = document.activeElement;
     if (activeElement?.tagName === "TEXTAREA" || isWritingText) {
       return; // Do not switch modes if the user is typing
     }
 
-    if ((e.ctrlKey || e.metaKey) && e.key === "z") {
+    if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "Z") {
       e.preventDefault();
       undoStroke();
       return;
     }
-    if ((e.ctrlKey || e.metaKey) && e.key === "y") {
+    if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "Y") {
       e.preventDefault();
       redoStroke();
       return;
     }
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "X") {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toUpperCase() === "X") {
+      console.log('clearing canvas');
+      e.preventDefault();
       clearCanvas();
+      return;
+    }
+    if((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "S") {
+      e.preventDefault();
+      downloadImage();
       return;
     }
     switch (e.key) {
