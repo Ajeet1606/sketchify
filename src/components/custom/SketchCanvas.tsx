@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useStrokes } from "@/context/StrokesContext";
 import { options, Point } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { Textarea } from "@/components/ui/textarea"
+import { Textarea } from "@/components/ui/textarea";
 
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
@@ -144,7 +144,16 @@ const SketchCanvas = () => {
   }
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    console.log('Key:', e.key, 'Ctrl:', e.ctrlKey, 'Meta:', e.metaKey, 'Shift:', e.shiftKey);
+    console.log(
+      "Key:",
+      e.key,
+      "Ctrl:",
+      e.ctrlKey,
+      "Meta:",
+      e.metaKey,
+      "Shift:",
+      e.shiftKey
+    );
 
     const activeElement = document.activeElement;
     if (activeElement?.tagName === "TEXTAREA" || isWritingText) {
@@ -162,13 +171,20 @@ const SketchCanvas = () => {
       return;
     }
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toUpperCase() === "X") {
-      console.log('clearing canvas');
+      console.log("clearing canvas");
       e.preventDefault();
       clearCanvas();
       return;
     }
-    if((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "S") {
+    if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "S") {
       e.preventDefault();
+      if (strokes.length === 0) {
+        toast({
+          variant: "destructive",
+          title: "Canvas is empty!",
+        });
+        return;
+      }
       downloadImage();
       return;
     }
@@ -180,10 +196,10 @@ const SketchCanvas = () => {
         break;
       case "2":
         // useCallback(() => {
-          toast({
-            variant: "destructive",
-            title: "Text mode is coming soon!",
-          });
+        toast({
+          variant: "destructive",
+          title: "Text mode is coming soon!",
+        });
         // }, []);
         // updateMode(ModeEnum.WRITE);
         // updateCursorStyle("text");
