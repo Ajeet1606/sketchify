@@ -12,10 +12,10 @@ const Info = () => {
         />
         <h1 className="text-xl md:text-3xl font-bold text-gray-800">Sketchify Me</h1>
       </div>
-      <p className="text-center text-gray-600 mb-2 md:mb-4">
+      <p className="text-sm md:text-lg text-center text-gray-600 mb-2 md:mb-3">
         All your data is saved locally in your browser.
       </p>
-      <h3 className="text-lg text-center md:text-xl font-semibold text-gray-800 mb-3">
+      <h3 className="text-base text-center md:text-xl font-semibold text-gray-800 mb-3">
         Common commands you can use:
       </h3>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">

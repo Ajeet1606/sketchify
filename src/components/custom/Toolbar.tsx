@@ -49,7 +49,7 @@ const Toolbar = () => {
   return (
     <div className=" bg-white py-3 px-2 md:px-4 rounded-md border mt-2 shadow-md z-50">
       <div className="space-x-2 md:flex">
-        {/* <div className="flex justify-center gap-2 mb-2 md:mb-0"> */}
+        <div className="flex justify-center gap-2 mb-2 md:mb-0">
           <Button
             variant={mode === ModeEnum.DRAW ? "default" : "outline"}
             onClick={() => handleModeChange(ModeEnum.DRAW)}
@@ -78,8 +78,8 @@ const Toolbar = () => {
             <Eraser className="md:w-4 w-3 md:h-4 h-3 mr-1 bg-inherit" />
             <span className="text-sm -mb-3">3</span>
           </Button>
-        {/* </div>
-        <div className="flex justify-center gap-2"> */}
+        </div>
+        <div className="flex justify-center gap-2">
           <Button
             variant={mode === ModeEnum.SCROLL ? "default" : "outline"}
             onClick={() => handleModeChange(ModeEnum.SCROLL)}
@@ -101,7 +101,7 @@ const Toolbar = () => {
           >
             <Download className="md:w-4 w-3 md:h-4 h-3 mr-1 bg-inherit" />
           </Button>
-        {/* </div> */}
+        </div>
       </div>
     </div>
   );

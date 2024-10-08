@@ -5,6 +5,7 @@ import { useStrokes } from "@/context/StrokesContext";
 import { options, Point } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
@@ -15,6 +16,7 @@ const SketchCanvas = () => {
   const [textValue, setTextValue] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const { toast } = useToast();
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
 
   const {
     mode,
@@ -33,7 +35,6 @@ const SketchCanvas = () => {
     updateMode,
     updateCursorStyle,
     updatePanOffset,
-    clearCanvas,
   } = useStrokes();
   useEffect(() => {
     options.size = strokeWidth;
@@ -164,7 +165,16 @@ const SketchCanvas = () => {
     }
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toUpperCase() === "X") {
       e.preventDefault();
-      clearCanvas();
+      console.log('erasing stroke', strokes);
+      if (strokes.length === 0) {
+        toast({
+          variant: "destructive",
+          title: "No strokes to erase!",
+          duration: 1000,
+        });
+      } else {
+        setIsAlertDialogOpen(true);
+      }
       return;
     }
     // if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "S") {
@@ -183,6 +193,7 @@ const SketchCanvas = () => {
         toast({
           variant: "destructive",
           title: "Text mode is coming soon!",
+          duration: 1000,
         });
         // }, []);
         // updateMode(ModeEnum.WRITE);
@@ -307,6 +318,11 @@ const SketchCanvas = () => {
           autoFocus={true}
         />
       )}
+
+      <ConfirmationDialog
+        isAlertDialogOpen={isAlertDialogOpen}
+        onClose={() => setIsAlertDialogOpen(false)}
+      />
     </div>
   );
 };
