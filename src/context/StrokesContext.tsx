@@ -174,6 +174,7 @@ export const StrokesProvider: React.FC<{ children: React.ReactNode }> = ({
       toast({
         variant: "destructive",
         title: "Canvas is empty!",
+        duration: 1000,
       });
       return;
     }
