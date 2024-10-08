@@ -3,10 +3,12 @@ import { strokeColors, strokeTaperValues, strokeWidths } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
 
 type props = {
-  togglePopoverState: () => void;
+  setIsPopoverOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const StylingPallete: React.FC<props> = ({ togglePopoverState }) => {
+const StylingPallete: React.FC<props> = ({
+  setIsPopoverOpen,
+}) => {
   const {
     updateStrokeColor,
     strokeColor,
@@ -16,13 +18,13 @@ const StylingPallete: React.FC<props> = ({ togglePopoverState }) => {
     updateStrokeTaper,
   } = useStrokes();
 
-  const handleClick = () => {
-    setTimeout(() => {
-      togglePopoverState();
-    }, 500);
-  };
   return (
-    <div className="flex gap-4 flex-col">
+    <div
+      className="flex gap-4 flex-col"
+      onMouseLeave={() => {
+        setIsPopoverOpen(false);
+      }}
+    >
       {/* stroke color */}
       <div className="flex flex-col">
         <h3 className="text-sm mb-1">Stroke Color</h3>
@@ -34,7 +36,6 @@ const StylingPallete: React.FC<props> = ({ togglePopoverState }) => {
               key={color}
               onClick={() => {
                 updateStrokeColor(color);
-                handleClick();
               }}
             >
               {strokeColor === color && (
@@ -56,7 +57,6 @@ const StylingPallete: React.FC<props> = ({ togglePopoverState }) => {
               key={width}
               onClick={() => {
                 updateStrokeWidth(width);
-                handleClick();
               }}
             >
               {width}
@@ -75,7 +75,6 @@ const StylingPallete: React.FC<props> = ({ togglePopoverState }) => {
               key={width}
               onClick={() => {
                 updateStrokeTaper(width);
-                handleClick();
               }}
             >
               {width}

@@ -13,10 +13,6 @@ const Footer = () => {
   const { undoStroke, redoStroke, handleZoom, scale } = useStrokes();
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
-  const togglePopoverState = () => {
-    setIsPopoverOpen((prev) => !prev);
-  };
-
   return (
     <div className="flex justify-center items-center gap-2 md:gap-6 px-2 md:px-6 py-4 w-full select-none cursor-default z-10">
       <div className="flex gap-2 md:gap-4">
@@ -41,7 +37,7 @@ const Footer = () => {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-fit">
-              <StylingPallete togglePopoverState={togglePopoverState} />
+              <StylingPallete setIsPopoverOpen={setIsPopoverOpen} />
             </PopoverContent>
           </Popover>
 
