@@ -7,10 +7,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  // AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import React from "react";
-import { useStrokes } from "@/context/StrokesContext";
+import { useStrokesStore } from "@/store/strokesStore";
 
 type props = {
   isAlertDialogOpen: boolean;
@@ -20,7 +19,7 @@ const ConfirmationDialog: React.FC<props> = ({
   isAlertDialogOpen,
   onClose,
 }) => {
-  const { clearCanvas } = useStrokes();
+  const { clearCanvas } = useStrokesStore();
   return (
     <AlertDialog open={isAlertDialogOpen} onOpenChange={onClose}>
       {/* <AlertDialogTrigger>Open</AlertDialogTrigger> */}

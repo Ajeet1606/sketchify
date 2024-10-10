@@ -1,4 +1,4 @@
-import { useStrokes } from "@/context/StrokesContext";
+import { useStrokesStore } from "@/store/strokesStore";
 import { Mode, ModeEnum } from "@/lib/utils";
 import {
   Pencil,
@@ -12,8 +12,10 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 const Toolbar = () => {
-  const { updateMode, mode, updateCursorStyle, downloadImage } = useStrokes();
+  const { updateMode, mode, updateCursorStyle, downloadImage } =
+    useStrokesStore();
   const { toast } = useToast();
+
   const handleModeChange = (newMode: Mode) => {
     const activeElement = document.activeElement;
     if (activeElement?.tagName === "TEXTAREA") {
@@ -46,6 +48,15 @@ const Toolbar = () => {
     }
   };
 
+  const handleDownload = () => {
+    downloadImage((message: string) =>
+      toast({
+        variant: "destructive",
+        title: message,
+        duration: 1000,
+      })
+    );
+  };
   return (
     <div className=" bg-white py-3 px-2 md:px-4 rounded-md border mt-2 shadow-md z-50">
       <div className="space-x-2 md:flex">
@@ -97,7 +108,7 @@ const Toolbar = () => {
 
           <Button
             variant="outline"
-            onClick={downloadImage} // Trigger the download on click
+            onClick={handleDownload} // Trigger the download on click
           >
             <Download className="md:w-4 w-3 md:h-4 h-3 mr-1 bg-inherit" />
           </Button>

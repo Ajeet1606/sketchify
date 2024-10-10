@@ -1,4 +1,4 @@
-import { useStrokes } from "@/context/StrokesContext";
+import { useStrokesStore } from "@/store/strokesStore";
 import { strokeColors, strokeTaperValues, strokeWidths } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
 
@@ -16,7 +16,7 @@ const StylingPallete: React.FC<props> = ({
     strokeWidth,
     strokeTaper,
     updateStrokeTaper,
-  } = useStrokes();
+  } = useStrokesStore();
 
   return (
     <div

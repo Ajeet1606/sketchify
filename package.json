@@ -1,5 +1,5 @@
 {
-  "name": "shadcn-poc",
+  "name": "sketchify",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -26,7 +26,8 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
