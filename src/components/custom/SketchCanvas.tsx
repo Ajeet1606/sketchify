@@ -35,8 +35,9 @@ const SketchCanvas = () => {
     updateMode,
     updateCursorStyle,
     updatePanOffset,
+    downloadImage,
   } = useStrokesStore((state) => state);
-  
+
   useEffect(() => {
     options.size = strokeWidth;
     options.end.taper = strokeTaper;
@@ -178,11 +179,17 @@ const SketchCanvas = () => {
       }
       return;
     }
-    // if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "S") {
-    //   e.preventDefault();
-    //   downloadImage();
-    //   return;
-    // }
+    if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "S") {
+      e.preventDefault();
+      downloadImage((message: string) =>
+        toast({
+          variant: "destructive",
+          title: message,
+          duration: 1000,
+        })
+      );
+      return;
+    }
     switch (e.key) {
       case "1":
         updateMode(ModeEnum.DRAW);

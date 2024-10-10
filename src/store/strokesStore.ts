@@ -148,7 +148,6 @@ export const useStrokesStore = create<StrokesState>((set, get) => {
     downloadImage: (toast: (message: string) => void) => {
       const { strokes, canvasRef } = get();
       if (strokes.length === 0) {
-        console.error("Canvas is empty!");
         toast("Canvas is empty!");
         return;
       }
