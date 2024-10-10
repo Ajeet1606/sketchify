@@ -1,11 +1,11 @@
 import { getStroke } from "perfect-freehand";
 import { getSvgPathFromStroke, ModeEnum } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
-import { useStrokes } from "@/context/StrokesContext";
 import { options, Point } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import ConfirmationDialog from "./ConfirmationDialog";
+import { useStrokesStore } from "@/store/strokesStore";
 
 const SketchCanvas = () => {
   const [points, setPoints] = useState<Point[]>([]);
@@ -35,7 +35,9 @@ const SketchCanvas = () => {
     updateMode,
     updateCursorStyle,
     updatePanOffset,
-  } = useStrokes();
+    downloadImage,
+  } = useStrokesStore((state) => state);
+
   useEffect(() => {
     options.size = strokeWidth;
     options.end.taper = strokeTaper;
@@ -165,7 +167,7 @@ const SketchCanvas = () => {
     }
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toUpperCase() === "X") {
       e.preventDefault();
-      console.log('erasing stroke', strokes);
+      console.log("erasing stroke", strokes);
       if (strokes.length === 0) {
         toast({
           variant: "destructive",
@@ -177,11 +179,17 @@ const SketchCanvas = () => {
       }
       return;
     }
-    // if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "S") {
-    //   e.preventDefault();
-    //   downloadImage();
-    //   return;
-    // }
+    if ((e.ctrlKey || e.metaKey) && e.key.toUpperCase() === "S") {
+      e.preventDefault();
+      downloadImage((message: string) =>
+        toast({
+          variant: "destructive",
+          title: message,
+          duration: 1000,
+        })
+      );
+      return;
+    }
     switch (e.key) {
       case "1":
         updateMode(ModeEnum.DRAW);
@@ -225,7 +233,7 @@ const SketchCanvas = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [strokes]);
 
   // Function to redraw the canvas with strokes
   const drawStrokesOnCanvas = (ctx: CanvasRenderingContext2D) => {

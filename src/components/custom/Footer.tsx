@@ -1,4 +1,4 @@
-import { useStrokes } from "@/context/StrokesContext";
+import { useStrokesStore } from "@/store/strokesStore";
 import {
   Popover,
   PopoverContent,
@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 
 const Footer = () => {
-  const { undoStroke, redoStroke, handleZoom, scale } = useStrokes();
+  const { undoStroke, redoStroke, handleZoom, scale } = useStrokesStore();
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
   return (

@@ -2,10 +2,10 @@ import Footer from "@/components/custom/Footer";
 import Info from "@/components/custom/Info";
 import SketchCanvas from "@/components/custom/SketchCanvas";
 import Toolbar from "@/components/custom/Toolbar";
-import { useStrokes } from "@/context/StrokesContext";
+import { useStrokesStore } from "@/store/strokesStore";
 import { ModeEnum } from "@/lib/utils";
 const Home = () => {
-  const { mode, strokes } = useStrokes();
+  const { mode, strokes } = useStrokesStore();
   return (
       <div className="h-[100vh] overflow-hidden font-sans">
         <div className="absolute flex justify-center w-full top-0">
