@@ -116,7 +116,11 @@ export const useCanvas = () => {
       if (e.ctrlKey) {
         // Zooming
         const delta = e.deltaY * -0.01;
-        const newScale = Math.min(Math.max(scale + delta, 0.1), 5);
+        // limit zoom between 50% and 200%
+        const minScale = 0.5; // 50%
+        const maxScale = 2.0; // 200%
+        const newScale = Math.min(Math.max(scale + delta, minScale), maxScale);
+
         const scaleFactor = newScale / scale;
 
         const newPanOffset = {

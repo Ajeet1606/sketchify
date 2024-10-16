@@ -1,6 +1,6 @@
 const Info = () => {
   return (
-    <div className="bg-white rounded-xl shadow-lg border p-6 max-w-[80%] mx-auto mb-4">
+    <div className="bg-white rounded-xl shadow-lg border p-6 max-w-[80%] mx-auto">
       <div className="flex items-center justify-center mb-4">
         <img
           src="/logo.png"
@@ -16,10 +16,10 @@ const Info = () => {
       <p className="text-center text-gray-600 mb-2 md:mb-3">
         All your data is saved locally in your browser.
       </p>
-      <h3 className="text-lg text-center md:text-xl font-semibold text-gray-800 mb-3">
+      <h3 className="text-center md:text-xl font-semibold text-gray-800 mb-3">
         Common commands you can use:
       </h3>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+      <div className="md:grid grid-cols-2 md:grid-cols-3 gap-2 mb-4 hidden">
         <CommandItem command="Press 1" action="Draw" />
         <CommandItem command="Press 2" action="Text" />
         <CommandItem command="Press 3" action="Erase" />
@@ -30,10 +30,12 @@ const Info = () => {
         <CommandItem command="Ctrl + S" action="Save as Image" />
         <CommandItem command="Ctrl + Shift + X" action="Clear all" />
       </div>
-      <p className="text-center text-gray-600">
-        You can change the color and width of strokes from the palette given at
+      <p className="text-center text-gray-600 text-sm">
+        You can change the color, width and tapers of strokes from the palette given at
         the bottom.
       </p>
+
+      <p className="text-center text-gray-600 text-sm md:hidden mt-1">Select ✏️ icon to start writing.</p>
     </div>
   );
 };

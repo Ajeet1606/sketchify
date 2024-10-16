@@ -131,15 +131,25 @@ export const useStrokesStore = create<StrokesState>((set, get) => {
 
       const rect = canvas.getBoundingClientRect();
       const zoomFactor = 0.1;
-      const newScale = zoomIn ? scale + zoomFactor : scale - zoomFactor;
+      const minScale = 0.5; // 50%
+      const maxScale = 2.0; // 200%
+      const newScale = Math.min(
+        Math.max(scale + (zoomIn ? zoomFactor : -zoomFactor), minScale),
+        maxScale
+      );
 
+      if (newScale === scale) return;
+
+      const scaleFactor = newScale / scale;
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
-      const newOffsetX = centerX - ((centerX - panOffset.x) / scale) * newScale;
-      const newOffsetY = centerY - ((centerY - panOffset.y) / scale) * newScale;
+      const newPanOffset = {
+        x: centerX - (centerX - panOffset.x) * scaleFactor,
+        y: centerY - (centerY - panOffset.y) * scaleFactor,
+      };
 
-      set({ panOffset: { x: newOffsetX, y: newOffsetY }, scale: newScale });
+      set({ panOffset: newPanOffset, scale: newScale });
     },
 
     // Clear the canvas

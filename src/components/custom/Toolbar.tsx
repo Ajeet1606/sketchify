@@ -79,7 +79,7 @@ const ModeButton: React.FC<{
           variant={isActive ? "default" : "outline"}
           onClick={onClick}
           disabled={config.disabled}
-          className="rounded-xl border-none shadow-none h-10"
+          className="rounded-lg border shadow-none h-10"
         >
           <config.icon className="w-4 h-4 mr-[2px] md:mr-1 bg-inherit" />
           <span className="hidden md:inline text-sm -mb-3">
@@ -164,7 +164,7 @@ const Toolbar: React.FC = () => {
                 <Button
                   variant="outline"
                   onClick={handleDownload}
-                  className="rounded-xl border-none shadow-none h-10"
+                  className="rounded-lg border shadow-none h-10"
                 >
                   <Download className="md:w-4 w-3 md:h-4 h-3 mr-[2px] md:mr-1 bg-inherit" />
                 </Button>
