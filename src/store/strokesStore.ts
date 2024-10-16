@@ -20,6 +20,7 @@ interface StrokesState {
   scale: number;
   panOffset: { x: number; y: number };
   canvasRef: React.RefObject<HTMLCanvasElement>;
+
   updateCursorStyle: (cursorStyle: string) => void;
   updateMode: (mode: Mode) => void;
   addStroke: (newStroke: Stroke) => void;

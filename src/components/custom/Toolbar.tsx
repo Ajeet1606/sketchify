@@ -79,8 +79,9 @@ const ModeButton: React.FC<{
           variant={isActive ? "default" : "outline"}
           onClick={onClick}
           disabled={config.disabled}
+          className="rounded-xl border-none shadow-none h-10"
         >
-          <config.icon className="md:w-4 w-3 md:h-4 h-3 mr-[2px] md:mr-1 bg-inherit" />
+          <config.icon className="w-4 h-4 mr-[2px] md:mr-1 bg-inherit" />
           <span className="hidden md:inline text-sm -mb-3">
             {config.shortcut}
           </span>
@@ -145,8 +146,8 @@ const Toolbar: React.FC = () => {
   }, [handleModeChange]);
 
   return (
-    <nav className="md:bg-white py-2 md:px-4 md:rounded-md md:border mt-2 md:shadow-md z-50">
-      <ul className="space-x-2 md:space-x-2 md:flex">
+    <nav className="md:bg-white py-2 md:px-4 md:rounded-xl md:border mt-2 md:shadow-md z-50">
+      <ul className="space-x-2 md:space-x-2 flex">
         {modeConfigs.map((config) => (
           <li key={config.mode}>
             <ModeButton
@@ -160,7 +161,11 @@ const Toolbar: React.FC = () => {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" onClick={handleDownload}>
+                <Button
+                  variant="outline"
+                  onClick={handleDownload}
+                  className="rounded-xl border-none shadow-none h-10"
+                >
                   <Download className="md:w-4 w-3 md:h-4 h-3 mr-[2px] md:mr-1 bg-inherit" />
                 </Button>
               </TooltipTrigger>

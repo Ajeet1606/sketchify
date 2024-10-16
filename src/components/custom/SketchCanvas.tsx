@@ -44,7 +44,6 @@ const SketchCanvas: React.FC = () => {
     setTextValue(e.target.value);
   };
 
-  //include keyboard shortcut handler hook
   useKeyboardShortcuts(handleCanvasClickOutside, setIsAlertDialogOpen);
 
   const handleCanvasPointerDown = (
@@ -66,15 +65,20 @@ const SketchCanvas: React.FC = () => {
   };
 
   return (
-    <div>
+    <div style={{ overflow: "hidden", width: "100%", height: "100%" }}>
       <canvas
         ref={canvasRef}
         onPointerDown={handleCanvasPointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
+        onTouchStart={(e) => e.preventDefault()}
+        onTouchMove={(e) => e.preventDefault()}
         width={window.innerWidth}
         height={window.innerHeight}
-        style={{ cursor: cursorStyle, touchAction: "none" }}
+        style={{
+          cursor: cursorStyle,
+          touchAction: "none",
+        }}
       />
 
       {isWritingText && (
@@ -85,6 +89,7 @@ const SketchCanvas: React.FC = () => {
           strokeColor={strokeColor}
           textValue={textValue}
           handleTextInput={handleTextInput}
+          scale={scale}
         />
       )}
 
