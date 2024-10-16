@@ -8,6 +8,7 @@ interface TextInputProps {
   strokeColor: string;
   textValue: string;
   handleTextInput: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  scale: number;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -17,6 +18,7 @@ const TextInput: React.FC<TextInputProps> = ({
   strokeColor,
   textValue,
   handleTextInput,
+  scale,
 }) => {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -34,14 +36,16 @@ const TextInput: React.FC<TextInputProps> = ({
     <Textarea
       style={{
         position: "absolute",
-        left: textBoxPosition.x + panOffset.x,
-        top: textBoxPosition.y + panOffset.y,
-        fontSize: "16px",
-        width: "200px",
-        height: "50px",
+        left: (textBoxPosition.x + panOffset.x) * scale,
+        top: (textBoxPosition.y + panOffset.y) * scale,
+        fontSize: `${16 * scale}px`,
+        width: `${200 * scale}px`,
+        height: `${50 * scale}px`,
         zIndex: 10,
         border: "none",
         color: strokeColor,
+        transform: `scale(${1 / scale})`,
+        transformOrigin: "top left",
       }}
       ref={textAreaRef}
       value={textValue}

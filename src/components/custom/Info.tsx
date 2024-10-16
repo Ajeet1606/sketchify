@@ -1,7 +1,6 @@
-
 const Info = () => {
   return (
-    <div className="bg-white rounded-lg shadow-lg border p-6 max-w-[80%] mx-auto mb-4">
+    <div className="bg-white rounded-xl shadow-lg border p-6 max-w-[80%] mx-auto mb-4">
       <div className="flex items-center justify-center mb-4">
         <img
           src="/logo.png"
@@ -10,7 +9,9 @@ const Info = () => {
           height={40}
           className="rounded-md mr-2"
         />
-        <h1 className="text-xl md:text-3xl font-bold text-gray-800">Sketchify Me</h1>
+        <h1 className="text-xl md:text-3xl font-bold text-gray-800">
+          Sketchify Me
+        </h1>
       </div>
       <p className="text-center text-gray-600 mb-2 md:mb-3">
         All your data is saved locally in your browser.
@@ -30,8 +31,8 @@ const Info = () => {
         <CommandItem command="Ctrl + Shift + X" action="Clear all" />
       </div>
       <p className="text-center text-gray-600">
-        You can change the color and width of strokes from the palette
-        given at the bottom.
+        You can change the color and width of strokes from the palette given at
+        the bottom.
       </p>
     </div>
   );

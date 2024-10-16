@@ -1,3 +1,4 @@
+import React, { useCallback, useEffect } from "react";
 import { useStrokesStore } from "@/store/strokesStore";
 import { Mode, ModeEnum } from "@/lib/utils";
 import {
@@ -7,46 +8,120 @@ import {
   Move,
   MousePointer,
   Download,
+  LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const Toolbar = () => {
+interface ModeConfig {
+  mode: Mode;
+  icon: LucideIcon;
+  cursorStyle: string;
+  label: string;
+  shortcut: string;
+  disabled?: boolean;
+}
+
+const modeConfigs: ModeConfig[] = [
+  {
+    mode: ModeEnum.DRAW,
+    icon: Pencil,
+    cursorStyle: "crosshair",
+    label: "Draw",
+    shortcut: "1",
+  },
+  {
+    mode: ModeEnum.WRITE,
+    icon: Type,
+    cursorStyle: "text",
+    label: "Write",
+    shortcut: "2",
+    disabled: true,
+  },
+  {
+    mode: ModeEnum.ERASE,
+    icon: Eraser,
+    cursorStyle: "pointer",
+    label: "Erase",
+    shortcut: "3",
+  },
+  {
+    mode: ModeEnum.SCROLL,
+    icon: Move,
+    cursorStyle: "grab",
+    label: "Move",
+    shortcut: "4",
+  },
+  {
+    mode: ModeEnum.CURSOR,
+    icon: MousePointer,
+    cursorStyle: "default",
+    label: "Select",
+    shortcut: "5",
+  },
+];
+
+const ModeButton: React.FC<{
+  config: ModeConfig;
+  isActive: boolean;
+  onClick: () => void;
+}> = ({ config, isActive, onClick }) => (
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant={isActive ? "default" : "outline"}
+          onClick={onClick}
+          disabled={config.disabled}
+          className="rounded-xl border-none shadow-none h-10"
+        >
+          <config.icon className="w-4 h-4 mr-[2px] md:mr-1 bg-inherit" />
+          <span className="hidden md:inline text-sm -mb-3">
+            {config.shortcut}
+          </span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>
+          {config.label} (Press {config.shortcut})
+        </p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+);
+
+const Toolbar: React.FC = () => {
   const { updateMode, mode, updateCursorStyle, downloadImage } =
     useStrokesStore();
   const { toast } = useToast();
 
-  const handleModeChange = (newMode: Mode) => {
-    const activeElement = document.activeElement;
-    if (activeElement?.tagName === "TEXTAREA") {
-      return;
-    }
-    if (newMode === ModeEnum.SCROLL) {
-      updateMode(ModeEnum.SCROLL);
-      updateCursorStyle("grab");
-    } else if (newMode === ModeEnum.DRAW) {
-      updateMode(ModeEnum.DRAW);
-      updateCursorStyle("crosshair");
-    } else if (newMode === ModeEnum.SQUARE) {
-      updateMode(ModeEnum.SQUARE);
-      updateCursorStyle("crosshair");
-    } else if (newMode === ModeEnum.CURSOR) {
-      updateMode(ModeEnum.CURSOR);
-      updateCursorStyle("default");
-    } else if (newMode === ModeEnum.ARROW) {
-      updateMode(ModeEnum.ARROW);
-      updateCursorStyle("crosshair");
-    } else if (newMode === ModeEnum.LINE) {
-      updateMode(ModeEnum.LINE);
-      updateCursorStyle("crosshair");
-    } else if (newMode === ModeEnum.WRITE) {
-      updateMode(ModeEnum.WRITE);
-      updateCursorStyle("text");
-    } else if (newMode === ModeEnum.ERASE) {
-      updateMode(ModeEnum.ERASE);
-      updateCursorStyle("pointer");
-    }
-  };
+  const handleModeChange = useCallback(
+    (newMode: Mode) => {
+      const activeElement = document.activeElement;
+      if (activeElement?.tagName === "TEXTAREA") return;
+
+      const config = modeConfigs.find((c) => c.mode === newMode);
+      if (config) {
+        updateMode(config.mode);
+        updateCursorStyle(config.cursorStyle);
+      }
+
+      if (newMode === ModeEnum.WRITE) {
+        toast({
+          variant: "destructive",
+          title: "Text mode is coming soon!",
+          duration: 1000,
+        });
+      }
+    },
+    [updateMode, updateCursorStyle, toast]
+  );
 
   const handleDownload = () => {
     downloadImage((message: string) =>
@@ -57,60 +132,51 @@ const Toolbar = () => {
       })
     );
   };
-  return (
-    <div className="md:bg-white py-2 md:px-4 md:rounded-md md:border mt-2 md:shadow-md z-50">
-      <div className="space-x-2 md:space-x-2 md:flex">
-          <Button
-            variant={mode === ModeEnum.DRAW ? "default" : "outline"}
-            onClick={() => handleModeChange(ModeEnum.DRAW)}
-          >
-            <Pencil className="md:w-4 w-3 md:h-4 h-3 mr-[2px] md:mr-1 bg-inherit" />
-            <span className="hidden md:inline text-sm -mb-3">1</span>
-          </Button>
-          <Button
-            variant={mode === ModeEnum.WRITE ? "default" : "outline"}
-            // onClick={() => handleModeChange(ModeEnum.WRITE)}
-            onClick={() => {
-              toast({
-                variant: "destructive",
-                title: "Text mode is coming soon!",
-                duration: 1000,
-              });
-            }}
-          >
-            <Type className="md:w-4 w-3 md:h-4 h-3 mr-[2px] md:mr-1 bg-inherit" />
-            <span className="hidden md:inline text-sm -mb-3">2</span>
-          </Button>
-          <Button
-            variant={mode === ModeEnum.ERASE ? "default" : "outline"}
-            onClick={() => handleModeChange(ModeEnum.ERASE)}
-          >
-            <Eraser className="md:w-4 w-3 md:h-4 h-3 mr-[2px] md:mr-1 bg-inherit" />
-            <span className="hidden md:inline text-sm -mb-3">3</span>
-          </Button>
-          <Button
-            variant={mode === ModeEnum.SCROLL ? "default" : "outline"}
-            onClick={() => handleModeChange(ModeEnum.SCROLL)}
-          >
-            <Move className="md:w-4 w-3 md:h-4 h-3 mr-[2px] md:mr-1 bg-inherit" />
-            <span className="hidden md:inline text-sm -mb-3">4</span>
-          </Button>
-          <Button
-            variant={mode === ModeEnum.CURSOR ? "default" : "outline"}
-            onClick={() => handleModeChange(ModeEnum.CURSOR)}
-          >
-            <MousePointer className="md:w-4 w-3 md:h-4 h-3 mr-[2px] md:mr-1 bg-inherit" />
-            <span className="hidden md:inline text-sm -mb-3">5</span>
-          </Button>
 
-          <Button
-            variant="outline"
-            onClick={handleDownload} // Trigger the download on click
-          >
-            <Download className="md:w-4 w-3 md:h-4 h-3 mr-[2px] md:mr-1 bg-inherit" />
-          </Button>
-        </div>
-    </div>
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      const config = modeConfigs.find((c) => c.shortcut === event.key);
+      if (config && !config.disabled) {
+        handleModeChange(config.mode);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [handleModeChange]);
+
+  return (
+    <nav className="md:bg-white py-2 md:px-4 md:rounded-xl md:border mt-2 md:shadow-md z-50">
+      <ul className="space-x-2 md:space-x-2 flex">
+        {modeConfigs.map((config) => (
+          <li key={config.mode}>
+            <ModeButton
+              config={config}
+              isActive={mode === config.mode}
+              onClick={() => handleModeChange(config.mode)}
+            />
+          </li>
+        ))}
+        <li>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  onClick={handleDownload}
+                  className="rounded-xl border-none shadow-none h-10"
+                >
+                  <Download className="md:w-4 w-3 md:h-4 h-3 mr-[2px] md:mr-1 bg-inherit" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Download Image</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </li>
+      </ul>
+    </nav>
   );
 };
 
