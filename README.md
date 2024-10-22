@@ -13,7 +13,7 @@ I always wanted to build something over canvas like Excalidraw so created this f
 - Fully responsive freehand writing with custom stroke color and width with Erase functionality
 - Custom Commands provided to handle different operations like Undo, Redo, Clear All and for switching between different modes.
 - Auto save sketches in local storage
-- Zoom and scroll functionality
+- Smooth Zoom and scroll functionality
 - Download canvas data as PNG image
 
 ## Installation 🛠️
@@ -41,7 +41,7 @@ yarn dev
 
 ## Improvements ⚒️
 - Add Text input
-- Proper pinch to zoom in/out & two finger scroll
+- Drag and drop elements on the canvas
 - Add different shapes drawing like Square, Line, Arrow etc.
 - Provide Image support
 
