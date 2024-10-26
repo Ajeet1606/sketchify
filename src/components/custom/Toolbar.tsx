@@ -42,7 +42,7 @@ const modeConfigs: ModeConfig[] = [
     cursorStyle: "text",
     label: "Write",
     shortcut: "2",
-    disabled: true,
+    // disabled: true,
   },
   {
     mode: ModeEnum.ERASE,
@@ -78,7 +78,7 @@ const ModeButton: React.FC<{
         <Button
           variant={isActive ? "default" : "outline"}
           onClick={onClick}
-          disabled={config.disabled}
+          // disabled={config.disabled}
           className="rounded-lg border shadow-none h-10"
         >
           <config.icon className="w-4 h-4 mr-[2px] md:mr-1 bg-inherit" />
@@ -112,13 +112,13 @@ const Toolbar: React.FC = () => {
         updateCursorStyle(config.cursorStyle);
       }
 
-      if (newMode === ModeEnum.WRITE) {
-        toast({
-          variant: "destructive",
-          title: "Text mode is coming soon!",
-          duration: 1000,
-        });
-      }
+      // if (newMode === ModeEnum.WRITE) {
+      //   toast({
+      //     variant: "destructive",
+      //     title: "Text mode is coming soon!",
+      //     duration: 1000,
+      //   });
+      // }
     },
     [updateMode, updateCursorStyle, toast]
   );
