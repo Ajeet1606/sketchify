@@ -67,11 +67,14 @@ export const useKeyboardShortcuts = (
           handleCanvasClickOutside();
           break;
         case "2":
-          toast({
-            variant: "destructive",
-            title: "Text mode is coming soon!",
-            duration: 1000,
-          });
+          // toast({
+          //   variant: "destructive",
+          //   title: "Text mode is coming soon!",
+          //   duration: 1000,
+          // });
+          updateMode(ModeEnum.WRITE);
+          updateCursorStyle("text");
+          handleCanvasClickOutside();
           break;
         case "3":
           updateMode(ModeEnum.ERASE);
